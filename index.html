@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b4f91"><meta name="description" content="Mastria AI — assistente de musculação, movimento e acompanhamento funcional.">
+<title>Mastria AI</title>
+<style>
+:root{--navy:#082b50;--blue:#0866b2;--sky:#28a5ed;--pale:#eaf5ff;--ink:#12283e;--muted:#65788d;--line:#dce8f2;--white:#fff;--bg:#f4f8fc;--green:#16865b;--orange:#bd6c16}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header{background:linear-gradient(135deg,#082b50,#0866b2 65%,#28a5ed);color:white;padding:22px 18px 26px;border-radius:0 0 24px 24px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:900;letter-spacing:.08em;font-size:19px}.brand small{display:block;font-size:10px;letter-spacing:.18em;opacity:.8;margin-top:3px}
+.pill{font-size:11px;border:1px solid #ffffff70;border-radius:99px;padding:6px 9px}
+h1{font-size:25px;line-height:1.15;margin:23px 0 8px}header p{margin:0;color:#e3f2ff;line-height:1.5;font-size:13px}
+main{max-width:760px;margin:auto;padding:16px 15px 92px}.section-title{font-size:17px;margin:20px 2px 11px;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.card{background:white;border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:0 4px 15px #12314b08}
+.stat{font-size:26px;font-weight:850;color:var(--blue)}.muted{color:var(--muted);font-size:12px;line-height:1.45}
+.card h3{font-size:15px;margin:0 0 7px}.icon{font-size:21px;margin-bottom:8px}
+button,.btn{border:0;border-radius:12px;background:var(--blue);color:white;padding:12px 14px;font-weight:750;font-size:13px;cursor:pointer}
+button.secondary{background:var(--pale);color:var(--blue)}button.ghost{background:white;border:1px solid var(--line);color:var(--ink)}
+button:active{transform:scale(.98)}.full{width:100%}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 5px calc(8px + env(safe-area-inset-bottom));z-index:5}
+.tabs button{background:transparent;color:#6b7e91;padding:7px 5px;min-width:60px;font-size:10px}.tabs button.active{color:var(--blue)}.tabs span{display:block;font-size:19px;margin-bottom:3px}
+.view{display:none}.view.active{display:block}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.tag{font-size:10px;background:var(--pale);color:var(--blue);padding:5px 8px;border-radius:99px;font-weight:800}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;background:white;color:var(--ink);font:inherit;margin:6px 0 12px}
+label{font-size:12px;font-weight:750;color:#42576b}.exercise{padding:13px 0;border-bottom:1px solid var(--line)}.exercise:last-child{border:0}
+.notice{background:#fff6e9;border:1px solid #f2d7ad;color:#75480f;padding:12px;border-radius:13px;font-size:12px;line-height:1.5}
+.good{background:#eaf8f1;border:1px solid #c8ead8;color:#176342;padding:12px;border-radius:13px;font-size:12px;line-height:1.5}
+.chat{background:white;border:1px solid var(--line);border-radius:16px;padding:14px;min-height:130px}.bubble{background:var(--pale);padding:11px;border-radius:12px;font-size:13px;line-height:1.5;margin:8px 0}
+small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
+@media(min-width:600px){main{padding-top:22px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}header{padding-left:max(22px,calc((100% - 720px)/2));padding-right:max(22px,calc((100% - 720px)/2))}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><div class="brand">MASTRIA AI<small>MOVIMENTO • FORÇA • EVOLUÇÃO</small></div><div class="pill">VERSÃO TESTE 0.1</div></div>
+ <h1>Seu movimento.<br>Sua evolução.</h1>
+ <p>Organize seus treinos, acompanhe sua evolução e registre como seu corpo responde.</p>
+</header>
+<main>
+<section id="home" class="view active">
+ <div class="section-title">Painel de hoje</div>
+ <div class="grid">
+  <div class="card"><div class="muted">Treinos registrados</div><div class="stat" id="totalWorkouts">0</div><div class="muted">nesta versão, neste aparelho</div></div>
+  <div class="card"><div class="muted">Sequência atual</div><div class="stat" id="streak">0</div><div class="muted">dias com registro</div></div>
+  <div class="card"><div class="muted">Exercícios disponíveis</div><div class="stat">12</div><div class="muted">biblioteca inicial</div></div>
+  <div class="card"><div class="muted">Registros funcionais</div><div class="stat" id="totalChecks">0</div><div class="muted">check-ins salvos</div></div>
+ </div>
+ <div class="section-title">Acesso rápido</div>
+ <div class="grid">
+  <div class="card"><div class="icon">🏋️</div><h3>Registrar treino</h3><p class="muted">Anote exercícios, séries e repetições.</p><button class="full" onclick="show('training')">Abrir</button></div>
+  <div class="card"><div class="icon">🧭</div><h3>Check-in corporal</h3><p class="muted">Registre disposição, desconforto e observações.</p><button class="full secondary" onclick="show('checkin')">Abrir</button></div>
+  <div class="card"><div class="icon">📚</div><h3>Exercícios</h3><p class="muted">Consulte a biblioteca educativa.</p><button class="full secondary" onclick="show('library')">Abrir</button></div>
+  <div class="card"><div class="icon">💬</div><h3>Assistente</h3><p class="muted">Conheça o fluxo inicial de orientação.</p><button class="full secondary" onclick="show('assistant')">Abrir</button></div>
+ </div>
+ <div class="section-title">Importante</div><div class="notice">O Mastria AI versão 0.1 é um protótipo de organização e educação física. Não diagnostica lesões, não prescreve reabilitação individual e não substitui avaliação de médico ou fisioterapeuta. Não treine com dor aguda, perda súbita de força, dormência nova ou piora importante: interrompa e procure avaliação profissional.</div>
+</section>
+
+<section id="training" class="view">
+ <div class="section-title">Registrar treino</div>
+ <div class="card">
+  <label>Nome do treino</label><input id="workoutName" placeholder="Ex.: Treino A — membros superiores">
+  <label>Exercício</label><select id="exerciseSelect"></select>
+  <div class="grid">
+   <div><label>Séries</label><input id="sets" type="number" min="1" max="20" value="3"></div>
+   <div><label>Repetições</label><input id="reps" type="number" min="1" max="100" value="10"></div>
+  </div>
+  <label>Carga (kg) — opcional</label><input id="load" type="number" min="0" step=".5" placeholder="Ex.: 20">
+  <label>Observações</label><textarea id="workoutNotes" rows="2" placeholder="Como foi a execução?"></textarea>
+  <button class="full" onclick="saveWorkout()">Salvar registro</button>
+ </div>
+ <div class="section-title">Histórico recente</div><div class="card" id="workoutHistory"><p class="muted">Nenhum treino registrado ainda.</p></div>
+</section>
+
+<section id="checkin" class="view">
+ <div class="section-title">Check-in corporal</div>
+ <div class="notice">Registre percepções pessoais. As respostas não são um diagnóstico nem determinam se um exercício é seguro para sua condição.</div>
+ <div class="card" style="margin-top:12px">
+  <label>Como está sua disposição hoje?</label><select id="energy"><option>Boa</option><option>Regular</option><option>Baixa</option></select>
+  <label>Há desconforto ou dor hoje?</label><select id="pain"><option>Não</option><option>Leve</option><option>Moderada</option><option>Forte</option></select>
+  <label>Região (se desejar)</label><input id="region" placeholder="Ex.: ombro, joelho, lombar">
+  <label>Observações</label><textarea id="checkNotes" rows="3" placeholder="Quando começou? O que percebeu?"></textarea>
+  <button class="full" onclick="saveCheckin()">Salvar check-in</button>
+ </div>
+ <div class="section-title">Seus registros</div><div class="card" id="checkHistory"><p class="muted">Nenhum check-in ainda.</p></div>
+</section>
+
+<section id="library" class="view">
+ <div class="section-title">Biblioteca inicial</div><p class="muted">Conteúdo educativo geral. A escolha e a execução devem respeitar avaliação, experiência, equipamento e condição individual.</p>
+ <div class="card" id="exerciseList"></div>
+</section>
+
+<section id="assistant" class="view">
+ <div class="section-title">Assistente Mastria</div>
+ <div class="notice">Demonstração local: esta versão ainda não está conectada a um modelo de IA. As respostas abaixo são orientações fixas de segurança, não uma avaliação clínica.</div>
+ <div class="chat" style="margin-top:12px"><strong>Olá! Como posso ajudar?</strong><div id="chatAnswer" class="bubble">Escolha um tema para ver como o assistente organiza a conversa.</div></div>
+ <div style="display:grid;gap:8px;margin-top:12px">
+  <button onclick="answer('treino')">Quero organizar meu treino</button>
+  <button class="secondary" onclick="answer('dor')">Estou sentindo dor</button>
+  <button class="secondary" onclick="answer('reabilitacao')">Quero voltar a me exercitar</button>
+  <button class="ghost" onclick="answer('evolucao')">Como acompanhar minha evolução?</button>
+ </div>
+</section>
+
+<section id="profile" class="view">
+ <div class="section-title">Perfil e dados</div>
+ <div class="card">
+  <label>Como gostaria de ser chamado?</label><input id="userName" placeholder="Seu nome">
+  <label>Objetivo principal</label><select id="goal"><option>Condicionamento geral</option><option>Hipertrofia</option><option>Força</option><option>Mobilidade</option><option>Retorno gradual à atividade</option><option>Bem-estar</option></select>
+  <button class="full" onclick="saveProfile()">Salvar perfil</button>
+ </div>
+ <div class="section-title">Privacidade</div>
+ <div class="card"><p class="muted">Nesta versão, os registros ficam armazenados localmente no navegador deste aparelho. Não há conta, sincronização em nuvem ou envio automático de dados.</p><button class="ghost full" onclick="exportData()">Exportar meus dados (JSON)</button><button class="ghost full" style="margin-top:8px" onclick="clearData()">Apagar dados deste aparelho</button></div>
+ <div class="section-title">Sobre</div><div class="card"><strong>Mastria AI · v0.1</strong><p class="muted">Protótipo funcional para testes iniciais. Próxima etapa: autenticação segura, IA real com limites clínicos, planos individualizados com validação profissional e sincronização protegida.</p></div>
+</section>
+</main>
+<nav class="tabs">
+ <button class="active" data-view="home" onclick="show('home')"><span>⌂</span>Início</button>
+ <button data-view="training" onclick="show('training')"><span>🏋️</span>Treino</button>
+ <button data-view="checkin" onclick="show('checkin')"><span>🧭</span>Check-in</button>
+ <button data-view="assistant" onclick="show('assistant')"><span>💬</span>Assistente</button>
+ <button data-view="profile" onclick="show('profile')"><span>☰</span>Perfil</button>
+</nav>
+<script>
+const exercises=[
+["Agachamento com peso corporal","Membros inferiores","Movimento multiarticular; use amplitude confortável e apoio se necessário."],
+["Sentar e levantar da cadeira","Membros inferiores","Prática funcional; cadeira firme e espaço livre."],
+["Ponte de quadril","Quadril","Exercício de extensão do quadril; interrompa se houver dor."],
+["Elevação de panturrilha","Panturrilhas","Fortalecimento geral; use apoio estável para equilíbrio."],
+["Flexão na parede","Membros superiores","Variação leve de empurrar; mantenha controle."],
+["Remada com elástico","Costas","Use resistência adequada e ancoragem segura."],
+["Retração escapular suave","Cintura escapular","Movimento de consciência corporal, sem forçar amplitude."],
+["Bird-dog","Tronco","Coordenação e estabilidade; movimento lento e controlado."],
+["Dead bug","Tronco","Controle do tronco; reduza a amplitude se perder controle."],
+["Caminhada leve","Condicionamento","Ajuste ritmo e duração à tolerância individual."],
+["Mobilidade torácica confortável","Coluna torácica","Movimente dentro de amplitude confortável, sem forçar."],
+["Respiração diafragmática tranquila","Respiração","Respire naturalmente; pare se sentir tontura."]
+];
+const key='mastria_ai_v01';
+let data=JSON.parse(localStorage.getItem(key)||'{"workouts":[],"checks":[],"profile":{}}');
+function persist(){localStorage.setItem(key,JSON.stringify(data));render()}
+function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));window.scrollTo(0,0)}
+function date(){return new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}
+function saveWorkout(){const ex=exercises[Number(document.getElementById('exerciseSelect').value)];data.workouts.unshift({date:date(),name:document.getElementById('workoutName').value||'Treino',exercise:ex[0],sets:document.getElementById('sets').value,reps:document.getElementById('reps').value,load:document.getElementById('load').value,notes:document.getElementById('workoutNotes').value});persist();document.getElementById('workoutNotes').value='';alert('Treino salvo neste aparelho.')}
+function saveCheckin(){data.checks.unshift({date:date(),energy:energy.value,pain:pain.value,region:region.value,notes:checkNotes.value});persist();alert('Check-in salvo neste aparelho.')}
+function saveProfile(){data.profile={name:userName.value,goal:goal.value};persist();alert('Perfil salvo.')}
+function answer(t){let a={treino:'Vamos começar pelo básico: qual é seu objetivo, sua experiência e quais equipamentos você tem? A versão atual apenas registra dados; ainda não monta prescrição individual.',dor:'Não tente vencer a dor treinando. Interrompa o movimento que provoca o sintoma. Dor forte, trauma, perda de força, dormência nova ou piora importante precisam de avaliação profissional.',reabilitacao:'O retorno depende da causa, fase de recuperação e avaliação profissional. Não vou indicar exercícios terapêuticos individualizados sem esses dados e validação de um profissional habilitado.',evolucao:'Acompanhe consistência, cargas, repetições, qualidade do movimento, disposição e resposta do corpo. Compare tendências ao longo das semanas, sem ignorar dor ou fadiga.'};chatAnswer.textContent=a[t]}
+function render(){totalWorkouts.textContent=data.workouts.length;totalChecks.textContent=data.checks.length;streak.textContent=new Set(data.workouts.map(x=>x.date.split(' ')[0])).size;workoutHistory.innerHTML=data.workouts.length?data.workouts.slice(0,12).map(x=>`<div class="exercise"><div class="row"><strong>${esc(x.exercise)}</strong><span class="tag">${esc(x.date)}</span></div><div class="muted">${esc(x.name)} · ${x.sets} séries × ${x.reps} repetições ${x.load?'· '+esc(x.load)+' kg':''}</div>${x.notes?`<small>${esc(x.notes)}</small>`:''}</div>`).join(''):'<p class="muted">Nenhum treino registrado ainda.</p>';checkHistory.innerHTML=data.checks.length?data.checks.slice(0,10).map(x=>`<div class="exercise"><strong>${esc(x.date)} — ${esc(x.pain)} desconforto</strong><div class="muted">Disposição: ${esc(x.energy)} · Região: ${esc(x.region||'não informada')}</div>${x.notes?`<small>${esc(x.notes)}</small>`:''}</div>`).join(''):'<p class="muted">Nenhum check-in ainda.</p>';if(data.profile.name)userName.value=data.profile.name;if(data.profile.goal)goal.value=data.profile.goal}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+exerciseSelect.innerHTML=exercises.map((e,i)=>`<option value="${i}">${e[0]}</option>`).join('');exerciseList.innerHTML=exercises.map(e=>`<div class="exercise"><div class="row"><strong>${e[0]}</strong><span class="tag">${e[1]}</span></div><div class="muted">${e[2]}</div></div>`).join('');render();
+function exportData(){const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='mastria-ai-meus-dados.json';a.click();URL.revokeObjectURL(u)}
+function clearData(){if(confirm('Apagar todos os registros locais deste aparelho? Esta ação não pode ser desfeita.')){localStorage.removeItem(key);data={workouts:[],checks:[],profile:{}};render();alert('Dados locais apagados.')}}
+</script>
+</body></html>
