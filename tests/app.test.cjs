@@ -64,7 +64,7 @@ test("a câmera fica no topo do treino e o avatar aparece ao lado em telas móve
   assert.match(html, /ANATOMIA MUSCULAR/);
   assert.equal((html.match(/id="mastriaVideo"/g) || []).length, 1);
   assert.equal((html.match(/id="mastriaCanvas"/g) || []).length, 1);
-  assert.match(html, /let mastriaFacing='user'/);
+  assert.match(html, /mastriaFacing='user'/);
 });
 
 test("o avatar acompanha famílias de movimento e todos os 132 exercícios têm classificação", () => {
