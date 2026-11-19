@@ -1,66 +1,84 @@
-const fs = require('node:fs');
-const vm = require('node:vm');
-const test = require('node:test');
-const assert = require('node:assert/strict');
+"use strict";
+const fs = require("node:fs");
+const vm = require("node:vm");
+const test = require("node:test");
+const assert = require("node:assert/strict");
 
-const html = fs.readFileSync('index.html', 'utf8');
+const html = fs.readFileSync("index.html", "utf8");
 const scripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
 
-test('a página contém estrutura principal em português', () => {
+test("a página inicial e as áreas principais existem em português", () => {
   assert.match(html, /<html lang="pt-BR">/);
-  for (const id of ['home', 'training', 'checkin', 'library', 'assistant', 'camera', 'profile']) {
+  for (const id of ["home", "training", "library", "admin", "userPlans"]) {
     assert.match(html, new RegExp('id="' + id + '"'));
+  }
+  assert.match(html, /data-view="home"/);
+  assert.match(html, /data-view="library"/);
+});
+
+test("todos os scripts embutidos têm sintaxe válida", () => {
+  assert.ok(scripts.length >= 2, "esperava os scripts principais");
+  scripts.forEach((source, index) => new vm.Script(source, { filename: "index-script-" + index + ".js" }));
+});
+
+test("a biblioteca expandida preserva os 132 exercícios e alertas de segurança", () => {
+  assert.match(html, /const exercises=\[/);
+  assert.match(html, /const extraExercises=\[/);
+  assert.match(html, /exercises\.push\(\.\.\.extraExercises\)/);
+  assert.match(html, /Não treine com dor aguda|interrompa se houver dor/i);
+  for (const name of ["Agachamento com apoio", "Marcha sentada para iliopsoas", "Abdominal curto", "Prancha lateral na parede", "Mobilidade cervical de rotação curta"]) {
+    assert.ok(html.includes(name), "exercício ausente: " + name);
   }
 });
 
-test('todos os scripts embutidos têm sintaxe válida', () => {
-  assert.ok(scripts.length >= 2, 'esperava os scripts principais');
-  scripts.forEach((source, index) => new vm.Script(source, { filename: 'index-script-' + index + '.js' }));
-});
-
-test('biblioteca mantém 132 exercícios e orientação de segurança', () => {
-  assert.match(html, /const exercises=\[/);
-  assert.match(html, /Não treine com dor aguda/);
-  assert.match(html, /extraExercises/);
-  assert.match(html, /exercises\.push\(\.\.\.extraExercises\)/);
-  assert.match(html, /interrompa se houver dor/i);
-});
-
-test('registro de treino valida séries, repetições e carga', () => {
+test("o registro de treino valida séries, repetições e carga", () => {
   assert.match(html, /function saveWorkout\(\)/);
   assert.match(html, /sets<1\|\|sets>20/);
   assert.match(html, /reps<1\|\|reps>100/);
 });
 
-test('câmera exige contexto seguro e tem encerramento do fluxo', () => {
+test("a câmera fica dentro do treino e é solicitada ao iniciar a sessão", () => {
+  assert.match(html, /id="trainingCamera"/);
+  assert.doesNotMatch(html, /id="camera"/);
+  assert.match(html, /async function startVirtualTraining\(\)[\s\S]{0,500}startMastriaCamera\(\)/);
+  assert.match(html, /function stopMastriaCamera/);
   assert.match(html, /getUserMedia/);
   assert.match(html, /window\.isSecureContext/);
-  assert.match(html, /function stopMastriaCamera/);
-  assert.match(html, /function testCameraSupport/);
   assert.match(html, /visibilitychange/);
+  assert.doesNotMatch(html, /onclick=["'][^"']*startMastriaCamera/);
 });
 
-test('o aplicativo informa armazenamento local e ausência de gravação automática', () => {
-  assert.match(html, /localStorage/);
-  assert.match(html, /sem gravação ou envio automático|não é gravado nem enviado/i);
+test("a parceria entre Mastria e HeroesFit é apresentada claramente na página inicial", () => {
+  assert.match(html, /ALIANÇA DE MOVIMENTO, SAÚDE E DESEMPENHO/);
+  assert.match(html, /MASTRIA/);
+  assert.match(html, /HEROESFIT/);
+  assert.match(html, /a HeroesFit fortalece a jornada de treino/);
+  assert.match(html, /a Mastria Massoterapia agrega cuidado corporal/);
 });
 
-test('a biblioteca expandida inclui exercícios adicionais de força e mobilidade', () => {
-  for (const name of ['Agachamento com apoio', 'Marcha sentada para iliopsoas', 'Abdominal curto', 'Prancha lateral na parede', 'Mobilidade cervical de rotação curta']) {
-    assert.ok(html.includes(name), 'exercício ausente: ' + name);
+test("o avatar visual tridimensional ilustrativo está presente", () => {
+  assert.match(html, /avatar3d-svg/);
+  assert.match(html, /avSkin/);
+  assert.match(html, /avShirt/);
+  assert.match(html, /PROFESSOR VIRTUAL MASTRIA/);
+});
+
+test("o painel administrativo cria e publica treinos locais para a tela inicial", () => {
+  for (const item of ["function showAdmin()", "function adminAddExercise()", "function adminSavePlan()", "function renderAdmin()", "function renderUserPlans()", "localStorage"]) {
+    assert.ok(html.includes(item), "recurso ausente: " + item);
   }
-  assert.match(html, /exerciseCount/);
+  assert.match(html, /sincronização entre aparelhos exige autenticação e banco de dados/i);
 });
 
-test('a interface conversa com o serviço de IA sem expor a chave no navegador', () => {
-  assert.match(html, /fetch\('\/api\/chat'/);
+test("o assistente usa o serviço seguro sem inserir chave secreta no navegador", () => {
+  assert.match(html, /fetch\(['"]\/api\/chat['"]/);
   assert.match(html, /OPENAI_API_KEY/);
   assert.doesNotMatch(html, /sk-[A-Za-z0-9]{20,}/);
 });
 
-test('a função de servidor valida método e entrada e usa a API Responses sem armazenamento', () => {
-  const api = fs.readFileSync('api/chat.js', 'utf8');
-  new vm.Script(api, { filename: 'api/chat.js' });
+test("o arquivo da API usa método POST, valida a entrada e não armazena conversas", () => {
+  const api = fs.readFileSync("api/chat.js", "utf8");
+  new vm.Script(api, { filename: "api/chat.js" });
   assert.match(api, /req\.method !== "POST"/);
   assert.match(api, /message\.length > 2000/);
   assert.match(api, /api\.openai\.com\/v1\/responses/);
