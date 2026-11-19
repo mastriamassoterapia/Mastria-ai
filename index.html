@@ -30,7 +30,37 @@ label{font-size:12px;font-weight:750;color:#42576b}.exercise{padding:13px 0;bord
 .chat{background:white;border:1px solid var(--line);border-radius:16px;padding:14px;min-height:130px}.bubble{background:var(--pale);padding:11px;border-radius:12px;font-size:13px;line-height:1.5;margin:8px 0}
 small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
 @media(min-width:600px){main{padding-top:22px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}header{padding-left:max(22px,calc((100% - 720px)/2));padding-right:max(22px,calc((100% - 720px)/2))}}
-.camera-stage{position:relative;aspect-ratio:4/3;background:#071c30;border-radius:15px;overflow:hidden;margin:10px 0}.camera-stage video,.camera-stage canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.camera-stage canvas{z-index:2}.avatar-row{display:flex;align-items:center;gap:13px;background:#eaf5ff;border-radius:16px;padding:13px;margin:10px 0}.avatar-face{width:64px;height:64px;flex:0 0 64px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#0866b2,#28a5ed);font-size:35px}.camera-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.status-line{font-size:12px;color:var(--muted);padding:8px 2px}</style>
+.camera-stage{position:relative;aspect-ratio:4/3;background:#071c30;border-radius:15px;overflow:hidden;margin:10px 0}.camera-stage video,.camera-stage canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.camera-stage canvas{z-index:2}.avatar-row{display:flex;align-items:center;gap:13px;background:#eaf5ff;border-radius:16px;padding:13px;margin:10px 0}.avatar-face{width:64px;height:64px;flex:0 0 64px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#0866b2,#28a5ed);font-size:35px}.camera-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.status-line{font-size:12px;color:var(--muted);padding:8px 2px}
+/* Experiência futurista de treino */
+:root{--bg:#071525;--ink:#eaf4ff;--muted:#91a9bf;--line:#1d3852;--white:#10243a;--pale:#123553;--blue:#1688e8;--sky:#45c8ff}
+body{background:radial-gradient(ellipse at 50% -15%,#123c63 0,#071525 55%);color:var(--ink)}
+header{background:linear-gradient(135deg,#06182b,#073e70 62%,#087fbd);border:1px solid #2b7db0}
+.card{background:linear-gradient(145deg,#10263d,#0b1c30);border:1px solid #244765;box-shadow:0 12px 34px #0003}
+.muted,small{color:#9bb1c6} .section-title{color:#eaf6ff;letter-spacing:.02em}
+input,select,textarea{background:#0a1b2d;color:#eaf4ff;border-color:#294762}
+.tabs{background:#07182bea;border-color:#24415d}.tabs button{color:#9bb1c6}
+.tabs button.active{color:#45c8ff}button.secondary{background:#123553;color:#8bd8ff;border:1px solid #28628b}
+button.ghost{background:#0b2035;color:#d9edff;border-color:#31516c}
+.home-hero{padding:22px;border:1px solid #287bb0;border-radius:22px;background:radial-gradient(circle at 85% 15%,#12659b88,transparent 45%),linear-gradient(140deg,#0c2b49,#091a2d);box-shadow:0 18px 45px #0004}
+.home-hero h2{font-size:23px;margin:0 0 7px}.home-hero p{color:#a9c4dc;font-size:13px;line-height:1.5}
+.start-btn{width:100%;padding:17px;font-size:16px;letter-spacing:.07em;background:linear-gradient(100deg,#0876cf,#21b8e8);box-shadow:0 8px 24px #0876cf55}
+.exercise-layout{display:grid;gap:14px}.anatomy-panel{position:relative;min-height:310px;border:1px solid #285273;border-radius:20px;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#164b70 0,#0b2035 58%,#081626 100%);display:grid;place-items:center}
+.anatomy-panel:after{content:"MODELO ANATÔMICO • VISUALIZAÇÃO EDUCATIVA";position:absolute;bottom:12px;font-size:9px;letter-spacing:.13em;color:#7fa9c8}
+.anatomy-svg{width:min(82%,280px);height:290px;filter:drop-shadow(0 15px 24px #0008)}
+.muscle{fill:#397b9e;stroke:#9bdcff;stroke-width:1.2;opacity:.9;transition:fill .25s,filter .25s}
+.muscle.active{fill:#ff8b58;filter:drop-shadow(0 0 8px #ff754b);stroke:#ffd1b8}
+.bone{fill:#d6e6f2;opacity:.82;stroke:#fff;stroke-width:.7}
+.anatomy-caption{position:absolute;top:12px;left:13px;right:13px;display:flex;justify-content:space-between;color:#b9dcf4;font-size:10px}
+.exercise-info{display:grid;gap:8px}.exercise-info h3{font-size:19px;margin:0}.muscle-chip{display:inline-flex;background:#3b251f;color:#ffb18d;border:1px solid #8a513d;border-radius:99px;padding:6px 10px;font-size:11px;font-weight:800;width:max-content}
+.demo-stage{border:1px solid #285273;background:#0b1e32;border-radius:18px;padding:14px}.demo-figure{height:105px;display:flex;align-items:center;justify-content:center;gap:20px}.demo-person{font-size:72px;filter:drop-shadow(0 5px 12px #0008);animation:demoMove 2s ease-in-out infinite alternate}.demo-person.upper{animation-name:demoUpper}.demo-person.lower{animation-name:demoLower}.demo-person.core{animation-name:demoCore}
+@keyframes demoMove{from{transform:translateY(5px) scale(.98)}to{transform:translateY(-5px) scale(1.03)}}
+@keyframes demoUpper{from{transform:rotate(-8deg) translateY(4px)}to{transform:rotate(8deg) translateY(-5px)}}
+@keyframes demoLower{from{transform:translateY(7px) rotate(-5deg)}to{transform:translateY(-4px) rotate(5deg)}}
+@keyframes demoCore{from{transform:rotate(-4deg) scale(.98)}to{transform:rotate(4deg) scale(1.02)}}
+.exercise-row{padding:13px;border:1px solid #23445f;border-radius:14px;margin:8px 0;background:#0c2034}
+.exercise-row.selected{border-color:#28a9ee;background:#10314b}
+@media(min-width:650px){.exercise-layout{grid-template-columns:1fr 1fr}.anatomy-panel{min-height:370px}.anatomy-svg{height:340px}}
+</style>
 </head>
 <body>
 <header>
@@ -40,7 +70,8 @@ small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
 </header>
 <main>
 <section id="home" class="view active">
- <div class="section-title">Painel de hoje</div>
+ <div class="home-hero"><div class="tag">MASTRIA AI • TREINO INTELIGENTE</div><h2>Seu próximo treino começa aqui.</h2><p>Entre na sessão e acompanhe o professor virtual, com demonstração do movimento e referência anatômica dos músculos trabalhados.</p><button class="start-btn" onclick="startVirtualTraining()">▶ INICIAR TREINO</button></div>
+ <div class="section-title">Seu painel</div>
  <div class="grid">
   <div class="card"><div class="muted">Treinos registrados</div><div class="stat" id="totalWorkouts">0</div><div class="muted">nesta versão, neste aparelho</div></div>
   <div class="card"><div class="muted">Sequência atual</div><div class="stat" id="streak">0</div><div class="muted">dias com registro</div></div>
@@ -58,6 +89,9 @@ small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
 </section>
 
 <section id="training" class="view">
+ <div class="section-title">Professor virtual</div>
+ <div class="card"><div class="row"><span class="tag">SESSÃO GUIADA</span><span class="muted" id="trainingProgress">Pronto para começar</span></div><h2 id="coachExerciseName">Seu treino começa aqui</h2><div class="demo-stage"><div class="demo-figure"><div class="demo-person lower" id="coachDemo">🏃</div></div><strong id="coachStep">Toque em iniciar para ver a demonstração.</strong><p class="muted" id="coachInstruction">O professor virtual apresenta a sequência e os principais cuidados gerais.</p></div><div class="anatomy-panel" style="min-height:260px;margin-top:12px"><div class="anatomy-caption"><span>MÚSCULOS ATIVADOS</span><span>REFERÊNCIA EDUCATIVA</span></div><svg class="anatomy-svg" viewBox="0 0 220 390" style="height:240px"><path d="M99 57h22v20H99z M82 76Q110 65 138 76L151 151L132 184H88L69 151Z M71 84L51 112L42 180L54 187L77 125Z M149 84L169 112L178 180L166 187L143 125Z M89 181H131L135 238L122 246H98L85 238Z M87 290L105 290L101 365H87L80 307Z M115 290H133L140 307L133 365H119Z" fill="#5d91ac" stroke="#b6e4f7"/><path id="coachMuscle" class="muscle active" d="M89 213L108 219L105 291H87L80 239Z M112 219L131 213L140 239L133 291H115Z"/></svg></div>
+ <label>Escolher exercício</label><select id="coachExerciseSelect" onchange="selectCoachExercise(this.value)"></select><div class="grid" style="margin-top:12px"><button class="full" onclick="startCoachDemo()">▶ Iniciar demonstração</button><button class="secondary full" onclick="nextCoachExercise()">Próximo exercício →</button></div><div class="notice" style="margin-top:12px">Demonstração ilustrativa, não é análise biomecânica nem prescrição personalizada. Interrompa se sentir dor ou sintomas incomuns.</div></div>
  <div class="section-title">Registrar treino</div>
  <div class="card">
   <label>Nome do treino</label><input id="workoutName" placeholder="Ex.: Treino A — membros superiores">
@@ -87,8 +121,26 @@ small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
 </section>
 
 <section id="library" class="view">
- <div class="section-title">Biblioteca de exercícios</div><p class="muted">132 opções educativas, com foco em força, mobilidade, condicionamento e controle corporal. Não são protocolos de reabilitação individual.</p>
- <div class="card" id="exerciseList"></div>
+ <div class="section-title">Exercícios e anatomia</div><p class="muted">Escolha um exercício para visualizar a região muscular em destaque e a demonstração orientativa do movimento.</p>
+ <div class="exercise-layout"><div class="anatomy-panel"><div class="anatomy-caption"><span>ANATOMIA MUSCULAR</span><span>3D • INTERATIVO</span></div>
+ <svg class="anatomy-svg" viewBox="0 0 220 390" role="img" aria-label="Modelo anatômico humano estilizado com músculos destacados">
+ <defs><linearGradient id="skin" x1="0" x2="1"><stop stop-color="#4f8cac"/><stop offset=".5" stop-color="#b1d4e5"/><stop offset="1" stop-color="#386b8a"/></linearGradient><radialGradient id="muscleShade"><stop stop-color="#8bc5df"/><stop offset="1" stop-color="#245b7b"/></radialGradient></defs>
+ <ellipse cx="110" cy="32" rx="25" ry="29" fill="url(#skin)" stroke="#b6e4f7"/><path class="bone" d="M99 57h22v20H99z"/>
+ <path d="M82 76 Q110 65 138 76 L151 151 Q143 174 132 184 L88 184 Q77 166 69 151Z" fill="url(#skin)" stroke="#b6e4f7"/>
+ <path id="m-chest" class="muscle" d="M78 89Q108 75 108 111L108 133Q87 136 75 116Z M112 111Q112 75 142 89L145 116Q133 136 112 133Z"/>
+ <path id="m-back" class="muscle" d="M79 86Q110 74 141 86L132 151Q110 167 88 151Z"/>
+ <path id="m-core" class="muscle" d="M91 137H129L126 181H94Z"/>
+ <path d="M71 84Q58 85 51 112L42 180Q45 193 54 187L77 125Z M149 84Q162 85 169 112L178 180Q175 193 166 187L143 125Z" fill="url(#skin)" stroke="#b6e4f7"/>
+ <path id="m-arms" class="muscle" d="M53 104L43 177L53 184L68 123Z M167 104L177 177L167 184L152 123Z"/>
+ <path d="M89 181L131 181L135 238L122 246H98L85 238Z" fill="url(#skin)" stroke="#b6e4f7"/>
+ <path id="m-glutes" class="muscle" d="M87 181H133L130 211Q110 224 90 211Z"/>
+ <path id="m-quads" class="muscle" d="M89 213L108 219L105 291L87 291L80 239Z M112 219L131 213L140 239L133 291L115 291Z"/>
+ <path d="M87 290L105 290L101 365L87 365L80 307Z M115 290L133 290L140 307L133 365L119 365Z" fill="url(#skin)" stroke="#b6e4f7"/>
+ <path id="m-calves" class="muscle" d="M85 306L101 305L98 350L88 354Z M119 305L135 306L132 354L122 350Z"/>
+ <path d="M87 364L105 364L111 374L86 379Z M119 364L133 364L135 379L109 374Z" fill="#75a9c3" stroke="#b6e4f7"/>
+ </svg></div>
+ <div class="exercise-info"><div class="card"><span class="tag">EXERCÍCIO SELECIONADO</span><h3 id="selectedExerciseName">Agachamento com peso corporal</h3><p class="muted" id="selectedExerciseDesc">Movimento multiarticular; use amplitude confortável e apoio se necessário.</p><span class="muscle-chip" id="selectedMuscle">Quadríceps e glúteos</span><div class="demo-stage" style="margin-top:14px"><div class="row"><strong>Professor virtual</strong><span class="tag">DEMONSTRAÇÃO</span></div><div class="demo-figure"><div class="demo-person lower" id="demoPerson">🏃</div></div><strong id="demoTitle">Observe o movimento</strong><p class="muted" id="demoText">O professor apresenta uma referência visual do exercício. Ajuste a amplitude ao seu conforto.</p><button class="full" onclick="startVirtualTraining()">Iniciar com o professor</button></div></div></div></div>
+ <div class="section-title">Todos os exercícios</div><input id="exerciseSearch" placeholder="Buscar exercício ou grupo muscular..." oninput="renderExerciseList()"><div id="exerciseList"></div>
 </section>
 
 <section id="assistant" class="view">
@@ -183,7 +235,16 @@ async function askMastriaAI(){const input=document.getElementById('aiQuestion'),
 function render(){totalWorkouts.textContent=data.workouts.length;totalChecks.textContent=data.checks.length;streak.textContent=calculateStreak();workoutHistory.innerHTML=data.workouts.length?data.workouts.slice(0,12).map(x=>`<div class="exercise"><div class="row"><strong>${esc(x.exercise)}</strong><span class="tag">${esc(x.date)}</span></div><div class="muted">${esc(x.name)} · ${x.sets} séries × ${x.reps} repetições ${x.load?'· '+esc(x.load)+' kg':''}</div>${x.notes?`<small>${esc(x.notes)}</small>`:''}</div>`).join(''):'<p class="muted">Nenhum treino registrado ainda.</p>';checkHistory.innerHTML=data.checks.length?data.checks.slice(0,10).map(x=>`<div class="exercise"><strong>${esc(x.date)} — ${esc(x.pain)} desconforto</strong><div class="muted">Disposição: ${esc(x.energy)} · Região: ${esc(x.region||'não informada')}</div>${x.notes?`<small>${esc(x.notes)}</small>`:''}</div>`).join(''):'<p class="muted">Nenhum check-in ainda.</p>';if(data.profile.name)userName.value=data.profile.name;if(data.profile.goal)goal.value=data.profile.goal}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function calculateStreak(){const key=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;const days=[...new Set(data.workouts.map(x=>{const p=x.date.split(' ')[0].split('/');return p.length===3?`${p[2]}-${p[1]}-${p[0]}`:''}).filter(Boolean))].sort().reverse();if(!days.length)return 0;let d=new Date();d.setHours(0,0,0,0);if(days[0]!==key(d)){d.setDate(d.getDate()-1);if(days[0]!==key(d))return 0}let count=0;for(const day of days){const expected=new Date(d);expected.setDate(expected.getDate()-count);if(day!==key(expected))break;count++}return count}
-document.getElementById('exerciseCount').textContent=exercises.length;exerciseSelect.innerHTML=exercises.map((e,i)=>`<option value="${i}">${e[0]}</option>`).join('');exerciseList.innerHTML=exercises.map(e=>`<div class="exercise"><div class="row"><strong>${e[0]}</strong><span class="tag">${e[1]}</span></div><div class="muted">${e[2]}</div></div>`).join('');render();
+document.getElementById('exerciseCount').textContent=exercises.length;exerciseSelect.innerHTML=exercises.map((e,i)=>`<option value="${i}">${e[0]}</option>`).join('');document.getElementById('coachExerciseSelect').innerHTML=exercises.map((e,i)=>`<option value="${i}">${e[0]}</option>`).join('');renderExerciseList();selectCoachExercise(0);render();
+
+function muscleMeta(e){const t=(e[1]+' '+e[0]).toLowerCase();if(/quadr|perna|joelho|panturr|tornozelo|agach|afundo|degrau/.test(t))return {name:'Quadríceps, glúteos e panturrilhas',ids:['m-quads','m-glutes','m-calves'],demo:'lower',icon:'🏃',step:'Flexione quadris e joelhos com controle',text:'Mantenha os pés apoiados e joelhos acompanhando a direção dos pés. Use amplitude confortável.'};if(/peito|peitoral|flexão|supino/.test(t))return {name:'Peitoral e tríceps',ids:['m-chest','m-arms'],demo:'upper',icon:'🤸',step:'Empurre e retorne lentamente',text:'Mantenha o tronco organizado e não force os ombros. Ajuste a inclinação para controlar o esforço.'};if(/costas|remada|dorsal|escapular/.test(t))return {name:'Grande dorsal e músculos escapulares',ids:['m-back','m-arms'],demo:'upper',icon:'🏋️',step:'Puxe em direção ao tronco',text:'Evite encolher os ombros e controle também a volta do movimento.'};if(/ombro|braço|cotovelo|bíceps|tríceps/.test(t))return {name:'Deltoides e músculos dos braços',ids:['m-arms','m-chest'],demo:'upper',icon:'💪',step:'Movimente os braços sem impulso',text:'Use carga leve e amplitude confortável, sem elevar os ombros à força.'};if(/abd|tronco|core|prancha|bird|dead bug|lombar/.test(t))return {name:'Abdômen e estabilizadores do tronco',ids:['m-core','m-back'],demo:'core',icon:'🧘',step:'Mantenha o tronco estável e respire',text:'Evite prender a respiração e reduza a amplitude se perder o controle.'};if(/quadril|glúte/.test(t))return {name:'Glúteos e musculatura do quadril',ids:['m-glutes','m-quads'],demo:'lower',icon:'🏃',step:'Conduza o movimento pelo quadril',text:'Mantenha a pelve controlada e evite compensar com a lombar.'};return {name:'Músculos envolvidos conforme o movimento',ids:['m-core','m-back'],demo:'core',icon:'🧍',step:'Execute devagar e com controle',text:'Respeite sua amplitude confortável e mantenha a respiração natural.'}}
+function renderExerciseList(){const q=(document.getElementById('exerciseSearch')?.value||'').toLowerCase();const el=document.getElementById('exerciseList');if(!el)return;el.innerHTML=exercises.map((e,i)=>({e,i})).filter(x=>(x.e.join(' ').toLowerCase()).includes(q)).map(({e,i})=>`<div class="exercise-row ${Number(document.getElementById('coachExerciseSelect')?.value)===i?'selected':''}" onclick="selectCoachExercise(${i});show('library')"><div class="row"><strong>${esc(e[0])}</strong><span class="tag">${esc(e[1])}</span></div><div class="muted">${esc(e[2])}</div></div>`).join('')||'<p class="muted">Nenhum exercício encontrado.</p>'}
+function highlightMuscles(meta){document.querySelectorAll('.anatomy-svg .muscle').forEach(x=>x.classList.toggle('active',meta.ids.includes(x.id)));const c=document.getElementById('coachMuscle');if(c)c.classList.add('active')}
+function selectCoachExercise(value){const i=Math.max(0,Math.min(exercises.length-1,Number(value)||0)),e=exercises[i],m=muscleMeta(e);document.getElementById('coachExerciseSelect').value=String(i);document.getElementById('exerciseSelect').value=String(i);const name=document.getElementById('selectedExerciseName');if(name){name.textContent=e[0];document.getElementById('selectedExerciseDesc').textContent=e[2];document.getElementById('selectedMuscle').textContent=m.name;document.getElementById('demoTitle').textContent=m.step;document.getElementById('demoText').textContent=m.text;document.getElementById('demoPerson').textContent=m.icon;document.getElementById('demoPerson').className='demo-person '+m.demo}document.getElementById('coachExerciseName').textContent=e[0];document.getElementById('coachStep').textContent=m.step;document.getElementById('coachInstruction').textContent=m.text;document.getElementById('coachDemo').textContent=m.icon;document.getElementById('coachDemo').className='demo-person '+m.demo;highlightMuscles(m);renderExerciseList()}
+function startVirtualTraining(){show('training');selectCoachExercise(document.getElementById('coachExerciseSelect').value||0);startCoachDemo()}
+function startCoachDemo(){const e=exercises[Number(document.getElementById('coachExerciseSelect').value)||0],m=muscleMeta(e);document.getElementById('trainingProgress').textContent='Demonstração ativa';document.getElementById('coachStep').textContent='1 • '+m.step;document.getElementById('coachInstruction').textContent=m.text+' Repita apenas se for confortável.';const d=document.getElementById('coachDemo');d.style.animationDuration='1.15s';setTimeout(()=>{if(document.getElementById('trainingProgress'))document.getElementById('trainingProgress').textContent='Demonstração concluída — pronto para registrar'},6500)}
+function nextCoachExercise(){const sel=document.getElementById('coachExerciseSelect');sel.value=String((Number(sel.value)+1)%exercises.length);selectCoachExercise(sel.value);startCoachDemo()}
+
 function exportData(){const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='mastria-ai-meus-dados.json';a.click();URL.revokeObjectURL(u)}
 function clearData(){if(confirm('Apagar todos os registros locais deste aparelho? Esta ação não pode ser desfeita.')){localStorage.removeItem(key);data={workouts:[],checks:[],profile:{}};render();alert('Dados locais apagados.')}}
 </script>
