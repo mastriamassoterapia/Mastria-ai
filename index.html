@@ -30,7 +30,7 @@ label{font-size:12px;font-weight:750;color:#42576b}.exercise{padding:13px 0;bord
 .chat{background:white;border:1px solid var(--line);border-radius:16px;padding:14px;min-height:130px}.bubble{background:var(--pale);padding:11px;border-radius:12px;font-size:13px;line-height:1.5;margin:8px 0}
 small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
 @media(min-width:600px){main{padding-top:22px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}header{padding-left:max(22px,calc((100% - 720px)/2));padding-right:max(22px,calc((100% - 720px)/2))}}
-</style>
+.camera-stage{position:relative;aspect-ratio:4/3;background:#071c30;border-radius:15px;overflow:hidden;margin:10px 0}.camera-stage video,.camera-stage canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.camera-stage canvas{z-index:2}.avatar-row{display:flex;align-items:center;gap:13px;background:#eaf5ff;border-radius:16px;padding:13px;margin:10px 0}.avatar-face{width:64px;height:64px;flex:0 0 64px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#0866b2,#28a5ed);font-size:35px}.camera-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.status-line{font-size:12px;color:var(--muted);padding:8px 2px}</style>
 </head>
 <body>
 <header>
@@ -52,7 +52,7 @@ small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
   <div class="card"><div class="icon">🏋️</div><h3>Registrar treino</h3><p class="muted">Anote exercícios, séries e repetições.</p><button class="full" onclick="show('training')">Abrir</button></div>
   <div class="card"><div class="icon">🧭</div><h3>Check-in corporal</h3><p class="muted">Registre disposição, desconforto e observações.</p><button class="full secondary" onclick="show('checkin')">Abrir</button></div>
   <div class="card"><div class="icon">📚</div><h3>Exercícios</h3><p class="muted">Consulte a biblioteca educativa.</p><button class="full secondary" onclick="show('library')">Abrir</button></div>
-  <div class="card"><div class="icon">💬</div><h3>Assistente</h3><p class="muted">Conheça o fluxo inicial de orientação.</p><button class="full secondary" onclick="show('assistant')">Abrir</button></div>
+  <div class="card"><div class="icon">📷</div><h3>Câmera e avatar</h3><p class="muted">Abra a câmera e experimente o orientador visual.</p><button class="full secondary" onclick="show('camera')">Abrir</button></div><div class="card"><div class="icon">💬</div><h3>Assistente</h3><p class="muted">Conheça o fluxo inicial de orientação.</p><button class="full secondary" onclick="show('assistant')">Abrir</button></div>
  </div>
  <div class="section-title">Importante</div><div class="notice">O Mastria AI versão 0.1 é um protótipo de organização e educação física. Não diagnostica lesões, não prescreve reabilitação individual e não substitui avaliação de médico ou fisioterapeuta. Não treine com dor aguda, perda súbita de força, dormência nova ou piora importante: interrompa e procure avaliação profissional.</div>
 </section>
@@ -103,7 +103,15 @@ small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
  </div>
 </section>
 
-<section id="profile" class="view">
+<section id="camera" class="view">
+<div class="section-title">Câmera e orientador Mastria</div>
+<div class="avatar-row"><div class="avatar-face" id="mastriaAvatar">🤖</div><div><strong>Olá! Eu sou o orientador Mastria.</strong><div class="muted" id="avatarMessage">Posso acompanhar a imagem da câmera e mostrar referências visuais básicas.</div><button class="secondary" onclick="avatarSpeak()">Ouvir orientação</button></div></div>
+<div class="card"><div class="row"><strong>Visualização ao vivo</strong><span class="tag" id="cameraBadge">CÂMERA DESLIGADA</span></div>
+<div class="camera-stage"><div id="cameraPlaceholder" style="color:white;padding:25px">Toque em Ativar câmera e permita o acesso.</div><video id="mastriaVideo" autoplay playsinline muted></video><canvas id="mastriaCanvas"></canvas></div>
+<div class="camera-controls"><button onclick="startMastriaCamera()">Ativar câmera</button><button class="secondary" onclick="stopMastriaCamera()">Desligar</button><button class="secondary" onclick="switchMastriaCamera()">Trocar câmera</button><button class="ghost" onclick="toggleMirror()">Espelhar imagem</button></div><div class="status-line" id="cameraStatus">A câmera só será ativada quando você tocar no botão.</div></div>
+<div class="card" style="margin-top:12px"><strong>Leitura visual experimental</strong><div id="poseStatus" class="status-line">Aguardando câmera e detecção corporal.</div><div id="poseFeedback" class="bubble">O detector tentará marcar pontos de referência. Não é uma avaliação clínica.</div></div>
+<div class="notice" style="margin-top:12px">Privacidade: imagem processada no navegador, sem gravação ou envio automático. Use boa iluminação e não faça movimentos dolorosos.</div>
+</section><section id="profile" class="view">
  <div class="section-title">Perfil e dados</div>
  <div class="card">
   <label>Como gostaria de ser chamado?</label><input id="userName" placeholder="Seu nome">
@@ -119,7 +127,7 @@ small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
  <button class="active" data-view="home" onclick="show('home')"><span>⌂</span>Início</button>
  <button data-view="training" onclick="show('training')"><span>🏋️</span>Treino</button>
  <button data-view="checkin" onclick="show('checkin')"><span>🧭</span>Check-in</button>
- <button data-view="assistant" onclick="show('assistant')"><span>💬</span>Assistente</button>
+ <button data-view="assistant" onclick="show('assistant')"><span>💬</span>Assistente</button><button data-view="camera" onclick="show('camera')"><span>📷</span>Câmera</button>
  <button data-view="profile" onclick="show('profile')"><span>☰</span>Perfil</button>
 </nav>
 <script>
