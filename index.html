@@ -453,13 +453,11 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&mastriaStr
 </script><script>window.mastria3DReady=false;setTimeout(()=>{if(window.mastria3DReady)return;const stage=document.getElementById('mastria3DStage'),source=document.getElementById('libraryMotionAvatar');if(stage&&!document.getElementById('mastriaMotionAvatar')&&source){const clone=source.cloneNode(true);clone.id='mastriaMotionAvatar';stage.insertAdjacentElement('afterend',clone);clone.style.setProperty('display','block','important');stage.classList.add('failed');}},18000);</script>
 <script type="module">
 import * as THREE from 'https://esm.sh/three@0.180.0';
-import { GLTFLoader } from 'https://esm.sh/three@0.180.0/examples/jsm/loaders/GLTFLoader.js';
-const modelUrl='https://www.innerscene.com/api/library/run-maya-3d-person-animated-eebf24b9/download';
 const canvas=document.getElementById('mastria3DCanvas'),stage=document.getElementById('mastria3DStage'),status=document.getElementById('mastria3DStatus');
 let renderer,scene,camera,model,mixer,clock,baseRotations=[],bones={},activeMove='neutral',resizeObserver;
 function resize(){if(!renderer||!stage)return;const w=Math.max(1,stage.clientWidth),h=Math.max(1,stage.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
 function matchBones(keys){const all=[];model.traverse(o=>{if(o.isBone)all.push(o)});const found={};for(const [key,terms] of Object.entries(keys))found[key]=all.find(b=>{const n=b.name.toLowerCase().replace(/[^a-z0-9]/g,'');return terms.some(t=>n.includes(t))})||null;return found}
-function captureBase(){baseRotations=[];model.traverse(o=>{if(o.isBone)baseRotations.push([o,o.rotation.x,o.rotation.y,o.rotation.z])})}
+function captureBase(){baseRotations=Object.values(bones).filter(Boolean).map(o=>[o,o.rotation.x,o.rotation.y,o.rotation.z])}
 function resetPose(){for(const [b,x,y,z] of baseRotations)b.rotation.set(x,y,z)}
 function rot(b,x=0,y=0,z=0){if(b){b.rotation.x+=x;b.rotation.y+=y;b.rotation.z+=z}}
 function pose(t){if(!model)return;resetPose();const s=Math.sin(t*2.1),p=(s+1)/2,L=bones;
@@ -479,8 +477,36 @@ else rot(L.spine,.015*s)}
 function animate(){requestAnimationFrame(animate);if(!renderer)return;const dt=clock.getDelta();if(mixer&&activeMove==='walk')mixer.update(dt);else pose(clock.elapsedTime);renderer.render(scene,camera)}
 function fallback(err){stage.classList.add('failed');let old=document.getElementById('mastriaMotionAvatar');if(!old){const source=document.getElementById('libraryMotionAvatar');if(source){old=source.cloneNode(true);old.id='mastriaMotionAvatar';stage.insertAdjacentElement('afterend',old)}}if(old)old.style.setProperty('display','block','important');if(status)status.textContent='Modelo 3D indisponível; demonstração alternativa ativada.';console.warn('Instrutora 3D:',err)}
 try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.6));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(30,1,.1,100);camera.position.set(0,1.12,4.55);camera.lookAt(0,1.02,0);scene.add(new THREE.HemisphereLight(0xcceaff,0x17283c,2));const key=new THREE.DirectionalLight(0xffffff,2.5);key.position.set(2,3,4);scene.add(key);const rim=new THREE.DirectionalLight(0x45bfff,1.2);rim.position.set(-3,2,-2);scene.add(rim);clock=new THREE.Clock();resize();resizeObserver=new ResizeObserver(resize);resizeObserver.observe(stage);
-new GLTFLoader().load(modelUrl,g=>{model=g.scene;scene.add(model);const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());model.scale.setScalar(2.15/(size.y||1));model.position.set(-center.x*model.scale.x,-box.min.y*model.scale.y,-center.z*model.scale.z);bones=matchBones({hips:['hips','pelvis'],spine:['spine01','spine1','spine'],chest:['spine02','spine2','chest'],head:['head'],armL:['upperarm01l','upperarm1l','upperarml','leftarm'],armR:['upperarm01r','upperarm1r','upperarmr','rightarm'],foreL:['forearm01l','forearm1l','forearml','leftforearm'],foreR:['forearm01r','forearm1r','forearmr','rightforearm'],thighL:['thighl','thigh01l','leftupleg'],thighR:['thighr','thigh01r','rightupleg'],calfL:['calfl','calf01l','leftleg'],calfR:['calfr','calf01r','rightleg']});captureBase();if(g.animations?.length){mixer=new THREE.AnimationMixer(model);const clip=g.animations.find(a=>/run|walk/i.test(a.name))||g.animations[0];window.mastriaRunAction=mixer.clipAction(clip);window.mastriaRunAction.play();window.mastriaRunAction.paused=true}stage.classList.remove('failed');window.mastria3DReady=true;if(status)status.textContent='Instrutora 3D pronta • movimento selecionado';animate()},undefined,fallback);
-}catch(e){fallback(e)}
-window.setMastria3DExercise=meta=>{activeMove=meta?.move||'neutral';if(window.mastriaRunAction)window.mastriaRunAction.paused=true;if(status&&model)status.textContent='Modelo 3D carregado • demonstração específica deste exercício ainda não disponível';};
+function mat(color,roughness=.72,metalness=0){return new THREE.MeshStandardMaterial({color,roughness,metalness})}
+function part(parent,geometry,material,pos,scale){const m=new THREE.Mesh(geometry,material);m.position.set(...pos);m.scale.set(...scale);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m}
+function joint(parent,pos){const g=new THREE.Group();g.position.set(...pos);parent.add(g);return g}
+function capsule(parent,length,radius,material){return part(parent,new THREE.CapsuleGeometry(radius,Math.max(.01,length-radius*2),6,12),material,[0,-length/2,0],[1,1,1])}
+function buildMastriaTeacher(){
+ const skin=mat('#d99a78'),skinLight=mat('#edb79a'),hair=mat('#3b211b'),hairHi=mat('#70432d'),blue=mat('#075db5'),blueLight=mat('#1678d2'),dark=mat('#092e54'),white=mat('#f7f9fc'),iris=mat('#493126'),black=mat('#171719'),mouth=mat('#a94751');
+ const root=new THREE.Group();scene.add(root);
+ const hips=joint(root,[0,.91,0]);part(hips,new THREE.SphereGeometry(1,28,20),blue,[0,0,0],[.255,.19,.145]);
+ const spine=joint(hips,[0,.13,0]);part(spine,new THREE.SphereGeometry(1,32,24),blue,[0,.27,0],[.29,.39,.16]);
+ part(spine,new THREE.SphereGeometry(1,24,18),skin,[0,.58,0],[.19,.12,.12]);
+ const chest=joint(spine,[0,.48,0]);part(chest,new THREE.SphereGeometry(1,32,24),blueLight,[0,.02,0],[.30,.24,.17]);
+ part(chest,new THREE.SphereGeometry(1,24,18),blue,[0,-.19,.015],[.285,.13,.16]);
+ const neck=joint(chest,[0,.23,0]);capsule(neck,.16,.065,skin);
+ const head=joint(neck,[0,.18,0]);part(head,new THREE.SphereGeometry(1,32,28),skinLight,[0,.04,0],[.145,.19,.135]);
+ part(head,new THREE.SphereGeometry(1,24,16),hair,[0,.15,-.025],[.15,.11,.14]);
+ part(head,new THREE.SphereGeometry(1,24,16),hair,[0,.01,-.105],[.15,.19,.055]);
+ for(const x of [-.055,.055]){part(head,new THREE.SphereGeometry(.018,12,10),white,[x,.075,.119],[1,1,.35]);part(head,new THREE.SphereGeometry(.009,12,10),iris,[x,.075,.128],[1,1,.45]);}
+ part(head,new THREE.SphereGeometry(.012,12,10),skin,[0,.035,.13],[.7,.8,.7]);part(head,new THREE.SphereGeometry(.026,16,10),mouth,[0,-.045,.12],[1,.38,.35]);
+ const pony=joint(head,[0,.17,-.11]);part(pony,new THREE.SphereGeometry(1,20,16),hairHi,[0,-.08,-.10],[.075,.19,.075]);
+ const shoulderL=joint(chest,[-.30,.12,0]),shoulderR=joint(chest,[.30,.12,0]);
+ function arm(side,shoulder){capsule(shoulder,.30,.075,skin);const elbow=joint(shoulder,[0,-.30,0]);capsule(elbow,.28,.061,skinLight);const hand=joint(elbow,[0,-.29,0]);part(hand,new THREE.SphereGeometry(1,16,12),skinLight,[0,-.045,.01],[.065,.085,.045]);return {upper:shoulder,fore:elbow,hand}}
+ const aL=arm('L',shoulderL),aR=arm('R',shoulderR);
+ const thighL=joint(hips,[-.14,-.10,0]),thighR=joint(hips,[.14,-.10,0]);
+ function leg(thigh){capsule(thigh,.43,.105,blue);const knee=joint(thigh,[0,-.43,0]);capsule(knee,.40,.073,skinLight);const foot=joint(knee,[0,-.41,.035]);part(foot,new THREE.SphereGeometry(1,20,14),white,[0,-.025,.07],[.09,.055,.17]);return {thigh,knee,foot}}
+ const legL=leg(thighL),legR=leg(thighR);
+ part(root,new THREE.SphereGeometry(1,20,16),white,[-.14,.055,.06],[.11,.055,.19]);part(root,new THREE.SphereGeometry(1,20,16),white,[.14,.055,.06],[.11,.055,.19]);
+ bones={hips,spine,chest,head,armL:aL.upper,armR:aR.upper,foreL:aL.fore,foreR:aR.fore,thighL:legL.thigh,thighR:legR.thigh,calfL:legL.knee,calfR:legR.knee};
+ model=root;captureBase();return root;
+}
+try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;scene=new THREE.Scene();const floor=new THREE.Mesh(new THREE.CircleGeometry(1.35,48),mat('#d9eafa'));floor.rotation.x=-Math.PI/2;floor.position.y=.015;scene.add(floor);const keyLight=new THREE.HemisphereLight(0xe7f5ff,0x52657b,2.1);scene.add(keyLight);const key=new THREE.DirectionalLight(0xffffff,2.5);key.position.set(2.5,4,4);scene.add(key);const rim=new THREE.DirectionalLight(0x45bfff,1.2);rim.position.set(-3,2,-2);scene.add(rim);camera=new THREE.PerspectiveCamera(32,1,.1,100);camera.position.set(0,1.2,4.6);camera.lookAt(0,1.05,0);clock=new THREE.Clock();resize();resizeObserver=new ResizeObserver(resize);resizeObserver.observe(stage);buildMastriaTeacher();stage.classList.remove('failed');window.mastria3DReady=true;if(status)status.textContent='Professora 3D Mastria ativa • selecione um exercício';animate();
+window.setMastria3DExercise=meta=>{activeMove=meta?.move||'neutral';if(status&&model)status.textContent='Professora 3D demonstrando: '+(meta?.label||'movimento controlado')};
 document.getElementById('coachExerciseSelect')?.dispatchEvent(new Event('change'));
 </script></body></html>
