@@ -67,6 +67,34 @@ test("a câmera fica no topo do treino e o avatar aparece ao lado em telas móve
   assert.match(html, /let mastriaFacing='user'/);
 });
 
+test("o avatar acompanha famílias de movimento e todos os 132 exercícios têm classificação", () => {
+  assert.match(html, /function exerciseMotionMeta\(e\)/);
+  assert.match(html, /function setAvatarMovement\(meta\)/);
+  assert.match(html, /setAvatarMovement\(motion\)/);
+  const first = html.indexOf("const exercises=[");
+  const firstEnd = html.indexOf("];const extraExercises=[", first);
+  const extraStart = firstEnd + "];const extraExercises=[".length;
+  const extraEnd = html.indexOf("];", extraStart);
+  assert.ok(first >= 0 && firstEnd > first && extraEnd > extraStart);
+  const source = html.slice(first, firstEnd) + html.slice(extraStart, extraEnd);
+  const entries = [...source.matchAll(/\["([^"]+)","([^"]+)","[^"]*"\]/g)];
+  assert.equal(entries.length, 132);
+  const fnSource = html.match(/function exerciseMotionMeta\(e\)\{[\s\S]*?\n\}/)?.[0];
+  assert.ok(fnSource, "mapa de movimentos ausente");
+  const classify = vm.runInNewContext("(" + fnSource + ")");
+  const allowed = new Set(["squat","hinge","bridge","calf","push","row","raise","curl","triceps","march","walk","core","hip","mobility","neutral"]);
+  for (const entry of entries) {
+    const meta = classify([entry[1], entry[2], ""]);
+    assert.ok(allowed.has(meta.move), "movimento inválido em " + entry[1]);
+    assert.ok(meta.label && meta.muscles && meta.cue, "orientação incompleta em " + entry[1]);
+    assert.match(html, new RegExp("move-" + meta.move));
+  }
+  assert.equal(classify(["Agachamento com peso corporal","Membros inferiores"]).move, "squat");
+  assert.equal(classify(["Remada com elástico","Costas"]).move, "row");
+  assert.equal(classify(["Ponte de quadril","Quadril"]).move, "bridge");
+  assert.equal(classify(["Bird-dog","Tronco"]).move, "core");
+});
+
 test("o avatar visual tridimensional ilustrativo está presente", () => {
   assert.match(html, /avatar3d-svg/);
   assert.match(html, /avSkin/);
