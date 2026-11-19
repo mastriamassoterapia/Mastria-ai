@@ -80,6 +80,21 @@ button.ghost{background:#0b2035;color:#d9edff;border-color:#31516c}
 .avatar3d-label{position:absolute;top:13px;left:14px;color:#a9dfff;font-size:9px;letter-spacing:.14em;font-weight:900}
 .avatar3d-caption{position:absolute;bottom:10px;left:0;right:0;text-align:center;color:#8eb7d2;font-size:9px;letter-spacing:.1em}
 @media(max-width:380px){.partners{gap:6px}.partner-logo{padding:7px;min-height:78px}.partner-plus{font-size:18px}.avatar3d-card{min-height:270px}}
+
+/* Câmera frontal fixa no topo da sessão e avatar anatômico ao lado */
+.training-live-top{margin:0 0 16px;padding:12px;border:1px solid #247bb4;border-radius:18px;background:linear-gradient(145deg,#0b2540,#071729)}
+.training-live-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(112px,.85fr);gap:9px;align-items:stretch}
+.training-live-camera{min-width:0;padding:8px;border:1px solid #245577;border-radius:14px;background:#061525}
+.training-live-camera .camera-stage{aspect-ratio:3/4;margin:8px 0}
+.training-live-camera .camera-controls{grid-template-columns:1fr}
+.training-live-camera .camera-controls button{padding:8px 4px;font-size:10px}
+.training-live-avatar{min-width:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:8px 4px;border:1px solid #247bb4;border-radius:14px;background:radial-gradient(ellipse at 50% 35%,#174b70,#071729 72%)}
+.training-live-avatar svg{width:100%;height:auto;max-height:285px;filter:drop-shadow(0 12px 15px #0009)}
+.training-live-avatar strong{font-size:10px;text-align:center;color:#9de4ff;line-height:1.35}
+.training-live-avatar small{font-size:8px;text-align:center;color:#92abc0}
+.training-live-avatar .muscle-chip{padding:5px 7px;margin-top:5px;border:1px solid #2b83b7;border-radius:99px;color:#9ce5ff;font-size:8px;text-align:center}
+.training-live-camera .camera-stage video,.training-live-camera .camera-stage canvas{transform:scaleX(-1)}
+@media(min-width:600px){.training-live-grid{grid-template-columns:minmax(0,1.25fr) minmax(190px,.75fr)}.training-live-camera .camera-stage{aspect-ratio:4/3}.training-live-camera .camera-controls{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
@@ -140,7 +155,37 @@ button.ghost{background:#0b2035;color:#d9edff;border-color:#31516c}
 </section>
 
 <section id="training" class="view">
- <div class="section-title">Professor virtual</div>
+ <div id="trainingCamera" class="training-live-top">
+<div class="section-title">Treino ao vivo</div><div class="training-live-grid">
+<div class="training-live-camera"><div class="row"><strong>Minha câmera</strong><span class="tag" id="cameraBadge">CÂMERA DESLIGADA</span></div>
+<div class="camera-stage"><div id="cameraPlaceholder" style="color:white;padding:25px">Toque em Iniciar treino para ativar a câmera frontal.</div><video id="mastriaVideo" autoplay playsinline muted></video><canvas id="mastriaCanvas"></canvas></div>
+<div class="camera-controls"><button class="secondary" onclick="stopMastriaCamera()">Desligar</button><button class="secondary" onclick="switchMastriaCamera()">Trocar câmera</button><button class="ghost" onclick="toggleMirror()">Espelhar imagem</button></div><div class="status-line" id="cameraStatus">A câmera será ativada ao iniciar a sessão.</div></div>
+<div class="training-live-avatar" aria-label="Avatar anatômico ilustrativo em estilo tridimensional">
+<strong>PROFESSOR VIRTUAL MASTRIA</strong>
+<svg viewBox="0 0 220 430" role="img" aria-label="Figura humana musculosa frontal com anatomia muscular ilustrada">
+<defs><linearGradient id="s3" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe0c2"/><stop offset=".4" stop-color="#d28b6c"/><stop offset="1" stop-color="#58313a"/></linearGradient><linearGradient id="m3" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffad91"/><stop offset=".45" stop-color="#c34d4b"/><stop offset="1" stop-color="#542b3b"/></linearGradient><radialGradient id="h3"><stop stop-color="#ffe0c4"/><stop offset="1" stop-color="#965541"/></radialGradient></defs>
+<ellipse cx="110" cy="415" rx="62" ry="9" fill="#020b17"/>
+<path d="M89 29Q88 5 110 5Q133 5 132 31L128 58Q121 75 110 76Q98 74 92 58Z" fill="url(#h3)" stroke="#633c38"/><path d="M89 27Q88 2 111 4Q135 5 132 29L125 20Q110 14 95 22Z" fill="#172431"/><path d="M99 37l7 1m10 0 7-1M105 54q5 4 10 0" stroke="#542e32" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M97 68L123 68L132 98L88 98Z" fill="url(#s3)"/>
+<path d="M88 86Q68 87 48 105L35 153L52 205L75 220L145 220L168 205L185 153L172 105Q152 87 132 86L122 101H98Z" fill="url(#s3)" stroke="#513541" stroke-width="2"/>
+<path d="M104 104Q77 91 57 111Q49 131 71 146Q91 153 108 135Z M116 104Q143 91 163 111Q171 131 149 146Q129 153 112 135Z" fill="url(#m3)" stroke="#f2b39b" stroke-width="1.5"/>
+<path d="M53 103Q30 91 20 116Q13 141 34 154L55 143L69 117Z M167 103Q190 91 200 116Q207 141 186 154L165 143L151 117Z" fill="url(#m3)" stroke="#efad92"/>
+<path d="M26 142Q12 160 20 196L34 242Q39 252 49 244L57 224L44 171Z M194 142Q208 160 200 196L186 242Q181 252 171 244L163 224L176 171Z" fill="url(#s3)" stroke="#71413b" stroke-width="2"/>
+<path d="M83 148Q110 138 137 148L144 210Q110 229 76 210Z" fill="url(#m3)" stroke="#e7a28d" stroke-width="1.5"/><path d="M110 149V211M82 168Q110 177 138 168M79 188Q110 197 141 188" fill="none" stroke="#6d343d" stroke-width="2"/>
+<path d="M76 211Q110 226 144 211L153 250L137 273H83L67 250Z" fill="url(#s3)" stroke="#593541"/>
+<path d="M82 239Q66 249 66 280L72 334Q81 349 94 334L105 282L108 253Z M138 239Q154 249 154 280L148 334Q139 349 126 334L115 282L112 253Z" fill="url(#m3)" stroke="#edaa91" stroke-width="1.5"/>
+<path d="M76 265Q91 252 101 270L98 319L83 335L73 308Z M144 265Q129 252 119 270L122 319L137 335L147 308Z" fill="#c45b50" stroke="#f2b59b"/>
+<path d="M85 337L103 337L101 389L92 405L78 402L82 372Z M135 337L117 337L119 389L128 405L142 402L138 372Z" fill="url(#s3)" stroke="#e5a58c"/>
+<path d="M78 400Q89 393 101 400L106 413L72 416Q68 408 78 400M142 400Q131 393 119 400L114 413L148 416Q152 408 142 400Z" fill="#1b3045"/>
+<path d="M110 101V212" stroke="#572f3b" stroke-width="2" opacity=".7"/>
+</svg>
+<div class="muscle-chip">ANATOMIA MUSCULAR • VISTA FRONTAL</div><small>Modelo visual educativo, não diagnóstico.</small>
+</div></div>
+<div class="status-line" id="poseStatus">Aguardando câmera e detecção corporal.</div><div class="bubble" id="poseFeedback">Enquadre o corpo inteiro. Os pontos visuais são referências aproximadas e não substituem avaliação profissional.</div>
+<div class="notice" style="margin-top:8px">Privacidade: o vídeo não é gravado nem enviado pelo aplicativo. O processamento visual ocorre no navegador.</div>
+<div class="avatar-row" style="margin-top:8px"><div class="avatar-face" id="mastriaAvatar">M</div><div><strong>Orientador Mastria</strong><div class="muted" id="avatarMessage">Aguardando início do treino.</div><button class="secondary" onclick="avatarSpeak()">Ouvir orientação</button></div></div>
+</div>
+<div class="section-title">Professor virtual</div>
  <div class="card"><div class="row"><span class="tag">SESSÃO GUIADA</span><span class="muted" id="trainingProgress">Pronto para começar</span></div><h2 id="coachExerciseName">Seu treino começa aqui</h2><div class="demo-stage"><div class="demo-figure"><div class="demo-person lower" id="coachDemo">🏃</div></div><strong id="coachStep">Toque em iniciar para ver a demonstração.</strong><p class="muted" id="coachInstruction">O professor virtual apresenta a sequência e os principais cuidados gerais.</p></div><div class="anatomy-panel" style="min-height:260px;margin-top:12px"><div class="anatomy-caption"><span>MÚSCULOS ATIVADOS</span><span>REFERÊNCIA EDUCATIVA</span></div><svg class="anatomy-svg" viewBox="0 0 220 390" style="height:240px"><path d="M99 57h22v20H99z M82 76Q110 65 138 76L151 151L132 184H88L69 151Z M71 84L51 112L42 180L54 187L77 125Z M149 84L169 112L178 180L166 187L143 125Z M89 181H131L135 238L122 246H98L85 238Z M87 290L105 290L101 365H87L80 307Z M115 290H133L140 307L133 365H119Z" fill="#5d91ac" stroke="#b6e4f7"/><path id="coachMuscle" class="muscle active" d="M89 213L108 219L105 291H87L80 239Z M112 219L131 213L140 239L133 291H115Z"/></svg></div>
  <label>Escolher exercício</label><select id="coachExerciseSelect" onchange="selectCoachExercise(this.value)"></select><div class="grid" style="margin-top:12px"><button class="full" onclick="startCoachDemo()">▶ Iniciar demonstração</button><button class="secondary full" onclick="nextCoachExercise()">Próximo exercício →</button></div><div class="notice" style="margin-top:12px">Demonstração ilustrativa, não é análise biomecânica nem prescrição personalizada. Interrompa se sentir dor ou sintomas incomuns.</div></div>
  <div class="section-title">Registrar treino</div>
@@ -156,15 +201,7 @@ button.ghost{background:#0b2035;color:#d9edff;border-color:#31516c}
   <button class="full" onclick="saveWorkout()">Salvar registro</button>
  </div>
  <div class="section-title">Histórico recente</div><div class="card" id="workoutHistory"><p class="muted">Nenhum treino registrado ainda.</p></div>
-<div id="trainingCamera" class="card" style="margin-top:14px"><div class="section-title">Câmera do treino</div>
-<div class="section-title">Câmera e orientador Mastria</div>
-<div class="avatar-row"><div class="avatar-face" id="mastriaAvatar">🤖</div><div><strong>Olá! Eu sou o orientador Mastria.</strong><div class="muted" id="avatarMessage">Sou um guia visual experimental. Os marcadores não avaliam lesões nem corrigem a execução automaticamente.</div><button class="secondary" onclick="avatarSpeak()">Ouvir orientação</button></div></div>
-<div class="card"><div class="row"><strong>Visualização ao vivo</strong><span class="tag" id="cameraBadge">CÂMERA DESLIGADA</span></div>
-<div class="camera-stage"><div id="cameraPlaceholder" style="color:white;padding:25px">A câmera será solicitada automaticamente quando você iniciar o treino.</div><video id="mastriaVideo" autoplay playsinline muted></video><canvas id="mastriaCanvas"></canvas></div>
-<div class="camera-controls"><button class="secondary" onclick="stopMastriaCamera()">Desligar</button><button class="secondary" onclick="switchMastriaCamera()">Trocar câmera</button><button class="ghost" onclick="toggleMirror()">Espelhar imagem</button></div><div class="status-line" id="cameraStatus">A câmera só será solicitada ao iniciar uma sessão de treino.</div></div>
-<div class="card" style="margin-top:12px"><strong>Leitura visual experimental</strong><div id="poseStatus" class="status-line">Aguardando câmera e detecção corporal.</div><div id="poseFeedback" class="bubble">O detector apenas marca referências visuais aproximadas; não mede ângulos com precisão nem substitui supervisão profissional.</div></div>
-<div class="notice" style="margin-top:12px">Privacidade: o vídeo não é gravado nem enviado pelo aplicativo. O detector baixa uma biblioteca externa pela internet; o processamento dos quadros ocorre no navegador. Use boa iluminação e não faça movimentos dolorosos.</div>
-</div></section>
+</section>
 
 <section id="checkin" class="view">
  <div class="section-title">Check-in corporal</div>
