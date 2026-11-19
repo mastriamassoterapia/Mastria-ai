@@ -5,7 +5,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 
 const html = fs.readFileSync("index.html", "utf8");
-const scripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
+const scripts = [...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi)].map(m => ({ attributes: m[1], source: m[2] }));
 
 test("a página inicial e as áreas principais existem em português", () => {
   assert.match(html, /<html lang="pt-BR">/);
@@ -18,7 +18,11 @@ test("a página inicial e as áreas principais existem em português", () => {
 
 test("todos os scripts embutidos têm sintaxe válida", () => {
   assert.ok(scripts.length >= 2, "esperava os scripts principais");
-  scripts.forEach((source, index) => new vm.Script(source, { filename: "index-script-" + index + ".js" }));
+  const regularScripts = scripts.filter(script => !/\btype=["']module["']/i.test(script.attributes));
+  regularScripts.forEach((script, index) => new vm.Script(script.source, { filename: "index-script-" + index + ".js" }));
+  const moduleScripts = scripts.filter(script => /\btype=["']module["']/i.test(script.attributes));
+  assert.ok(moduleScripts.length >= 1, "esperava o módulo responsável pelo avatar 3D");
+  assert.match(moduleScripts[0].source, /from ['"]https:\/\/esm\.sh\/three/);
 });
 
 test("a biblioteca expandida preserva os 132 exercícios e alertas de segurança", () => {
@@ -96,11 +100,12 @@ test("o avatar acompanha famílias de movimento e todos os 132 exercícios têm 
   assert.equal(classify(["Bird-dog","Tronco"]).move, "core");
 });
 
-test("o avatar visual tridimensional ilustrativo está presente", () => {
-  assert.match(html, /avatar3d-svg/);
-  assert.match(html, /motionAvSkinMain/);
-  assert.match(html, /avShirt/);
-  assert.match(html, /PROFESSOR VIRTUAL MASTRIA/);
+test("a instrutora humana 3D texturizada e articulada está integrada ao treino", () => {
+  assert.match(html, /id="mastria3DCanvas"/);
+  assert.match(html, /GLTFLoader/);
+  assert.match(html, /run-maya-3d-person-animated-eebf24b9/);
+  assert.match(html, /window\.setMastria3DExercise/);
+  assert.match(html, /function fallback\(err\)/);
 });
 
 test("o painel administrativo cria e publica treinos locais para a tela inicial", () => {
