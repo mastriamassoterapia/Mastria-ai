@@ -44,6 +44,7 @@ button.ghost{background:#0b2035;color:#d9edff;border-color:#31516c}
 .home-hero{padding:22px;border:1px solid #287bb0;border-radius:22px;background:radial-gradient(circle at 85% 15%,#12659b88,transparent 45%),linear-gradient(140deg,#0c2b49,#091a2d);box-shadow:0 18px 45px #0004}
 .home-hero h2{font-size:23px;margin:0 0 7px}.home-hero p{color:#a9c4dc;font-size:13px;line-height:1.5}
 .start-btn{width:100%;padding:17px;font-size:16px;letter-spacing:.07em;background:linear-gradient(100deg,#0876cf,#21b8e8);box-shadow:0 8px 24px #0876cf55}
+.home-brand{display:flex;justify-content:center;margin:0 auto 16px}.home-brand .partner-logo{width:190px;min-height:70px;box-shadow:0 8px 22px #0003}
 .exercise-layout{display:grid;gap:14px}.anatomy-panel{position:relative;min-height:310px;border:1px solid #285273;border-radius:20px;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#164b70 0,#0b2035 58%,#081626 100%);display:grid;place-items:center}
 .anatomy-panel:after{content:"MODELO ANATÔMICO • VISUALIZAÇÃO EDUCATIVA";position:absolute;bottom:12px;font-size:9px;letter-spacing:.13em;color:#7fa9c8}
 .anatomy-svg{width:min(82%,280px);height:290px;filter:drop-shadow(0 15px 24px #0008)}
@@ -146,7 +147,8 @@ button.ghost{background:#0b2035;color:#d9edff;border-color:#31516c}
 </header>
 <main>
 <section id="home" class="view active">
- <div class="home-hero"><div class="tag">MASTRIA AI • TREINO INTELIGENTE</div><h2>Seu próximo treino começa aqui.</h2><p>Entre na sessão e acompanhe o professor virtual, com demonstração do movimento e referência anatômica dos músculos trabalhados.</p><button class="start-btn" onclick="startVirtualTraining()">▶ INICIAR TREINO</button></div>
+ <div class="home-hero"><div class="tag">MASTRIA AI • TREINO INTELIGENTE</div><h2>Seu próximo treino começa aqui.</h2><p>Entre na sessão e acompanhe o professor virtual, com demonstração do movimento e referência anatômica dos músculos trabalhados.</p><div class="home-brand" aria-label="Mastria Massoterapia"><div class="partner-logo"><strong style="color:#11a9bd;font-weight:400">MASTRIA</strong><small>MASSOTERAPIA</small></div></div>
+<button class="start-btn" onclick="startVirtualTraining()">▶ INICIAR TREINO</button></div>
  <section class="partnership" aria-label="Parceria Mastria Massoterapia e HeroesFit Oficial">
  <div class="partnership-kicker">ALIANÇA DE MOVIMENTO, SAÚDE E DESEMPENHO</div>
  <div class="partners">
