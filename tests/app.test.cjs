@@ -56,6 +56,17 @@ test("a parceria entre Mastria e HeroesFit é apresentada claramente na página 
   assert.match(html, /a Mastria Massoterapia agrega cuidado corporal/);
 });
 
+test("a câmera fica no topo do treino e o avatar aparece ao lado em telas móveis", () => {
+  assert.match(html, /training-live-top/);
+  assert.match(html, /training-live-grid/);
+  assert.match(html, /training-live-camera/);
+  assert.match(html, /training-live-avatar/);
+  assert.match(html, /ANATOMIA MUSCULAR/);
+  assert.equal((html.match(/id="mastriaVideo"/g) || []).length, 1);
+  assert.equal((html.match(/id="mastriaCanvas"/g) || []).length, 1);
+  assert.match(html, /let mastriaFacing='user'/);
+});
+
 test("o avatar visual tridimensional ilustrativo está presente", () => {
   assert.match(html, /avatar3d-svg/);
   assert.match(html, /avSkin/);
