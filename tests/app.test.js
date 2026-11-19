@@ -39,6 +39,6 @@ test('professora 3D local não depende do modelo externo que falhava', () => {
 
 test('áreas principais do aplicativo continuam presentes', () => {
   for (const id of ['home', 'training', 'library', 'assistant', 'profile', 'admin', 'checkin']) {
-    assert.match(html, new RegExp('id=["\\']' + id + '["\\']'));
+    assert.ok(html.includes('id="' + id + '"'), 'área ausente: ' + id);
   }
 });
