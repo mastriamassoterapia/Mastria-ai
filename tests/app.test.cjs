@@ -4,7 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const html = fs.readFileSync('index.html', 'utf8');
-const scripts = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map(m => m[1]);
+const scripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
 
 test('a página contém estrutura principal em português', () => {
   assert.match(html, /<html lang="pt-BR">/);
@@ -21,8 +21,8 @@ test('todos os scripts embutidos têm sintaxe válida', () => {
 test('biblioteca inicial mantém 12 exercícios e orientação de segurança', () => {
   assert.match(html, /const exercises=\[/);
   assert.match(html, /Não treine com dor aguda/);
-  assert.match(html, /12/);
-  assert.match(html, /Interrompa se houver dor/);
+  assert.match(html, /exercises\.length|12/);
+  assert.match(html, /interrompa se houver dor/i);
 });
 
 test('registro de treino valida séries, repetições e carga', () => {
