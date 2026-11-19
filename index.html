@@ -406,10 +406,9 @@ function exerciseMotionMeta(e){
  return {move:"neutral",label:"Movimento funcional controlado",muscles:"Grupos envolvidos conforme a execução",cue:"Observe a demonstração e execute devagar, respeitando o apoio e a amplitude confortável.",ids:["m-core"]};
 }
 function setAvatarMovement(meta){
- const a=document.getElementById("mastriaMotionAvatar");if(!a)return;
- a.setAttribute("class","mastria-motion-avatar move-"+meta.move);
- const label=document.getElementById("avatarMotionLabel");if(label)label.textContent=meta.label;
- const muscles=document.getElementById("avatarMuscleLabel");if(muscles)muscles.textContent=meta.muscles;
+ ["mastriaMotionAvatar","libraryMotionAvatar"].forEach(id=>{const avatar=document.getElementById(id);if(avatar)avatar.setAttribute("class","mastria-motion-avatar move-"+meta.move)});
+ ["avatarMotionLabel","libraryMotionLabel"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=meta.label});
+ ["avatarMuscleLabel","libraryMuscleLabel"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=meta.muscles});
 }
 function renderExerciseList(){const q=(document.getElementById('exerciseSearch')?.value||'').toLowerCase();const el=document.getElementById('exerciseList');if(!el)return;el.innerHTML=exercises.map((e,i)=>({e,i})).filter(x=>(x.e.join(' ').toLowerCase()).includes(q)).map(({e,i})=>`<div class="exercise-row ${Number(document.getElementById('coachExerciseSelect')?.value)===i?'selected':''}" onclick="selectCoachExercise(${i});show('library')"><div class="row"><strong>${esc(e[0])}</strong><span class="tag">${esc(e[1])}</span></div><div class="muted">${esc(e[2])}</div></div>`).join('')||'<p class="muted">Nenhum exercício encontrado.</p>'}
 function highlightMuscles(meta){document.querySelectorAll('.anatomy-svg .muscle').forEach(x=>x.classList.toggle('active',meta.ids.includes(x.id)));const c=document.getElementById('coachMuscle');if(c)c.classList.add('active')}
