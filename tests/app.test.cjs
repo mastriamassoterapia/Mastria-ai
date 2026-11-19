@@ -72,8 +72,9 @@ test("o avatar acompanha famílias de movimento e todos os 132 exercícios têm 
   assert.match(html, /function setAvatarMovement\(meta\)/);
   assert.match(html, /setAvatarMovement\(motion\)/);
   const first = html.indexOf("const exercises=[");
-  const firstEnd = html.indexOf("];const extraExercises=[", first);
-  const extraStart = firstEnd + "];const extraExercises=[".length;
+  const extraStartMarker = html.indexOf("const extraExercises=[", first);
+  const firstEnd = html.lastIndexOf("];", extraStartMarker);
+  const extraStart = extraStartMarker + "const extraExercises=[".length;
   const extraEnd = html.indexOf("];", extraStart);
   assert.ok(first >= 0 && firstEnd > first && extraEnd > extraStart);
   const source = html.slice(first, firstEnd) + html.slice(extraStart, extraEnd);
@@ -97,7 +98,7 @@ test("o avatar acompanha famílias de movimento e todos os 132 exercícios têm 
 
 test("o avatar visual tridimensional ilustrativo está presente", () => {
   assert.match(html, /avatar3d-svg/);
-  assert.match(html, /avSkin/);
+  assert.match(html, /motionAvSkinMain/);
   assert.match(html, /avShirt/);
   assert.match(html, /PROFESSOR VIRTUAL MASTRIA/);
 });
