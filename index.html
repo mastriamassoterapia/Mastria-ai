@@ -30,7 +30,7 @@ label{font-size:12px;font-weight:750;color:#42576b}.exercise{padding:13px 0;bord
 .chat{background:white;border:1px solid var(--line);border-radius:16px;padding:14px;min-height:130px}.bubble{background:var(--pale);padding:11px;border-radius:12px;font-size:13px;line-height:1.5;margin:8px 0}
 small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
 @media(min-width:600px){main{padding-top:22px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}header{padding-left:max(22px,calc((100% - 720px)/2));padding-right:max(22px,calc((100% - 720px)/2))}}
-</style>
+.camera-stage{position:relative;aspect-ratio:4/3;background:#071c30;border-radius:15px;overflow:hidden;margin:10px 0}.camera-stage video,.camera-stage canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.camera-stage canvas{z-index:2}.avatar-row{display:flex;align-items:center;gap:13px;background:#eaf5ff;border-radius:16px;padding:13px;margin:10px 0}.avatar-face{width:64px;height:64px;flex:0 0 64px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#0866b2,#28a5ed);font-size:35px}.camera-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.status-line{font-size:12px;color:var(--muted);padding:8px 2px}</style>
 </head>
 <body>
 <header>
@@ -52,7 +52,7 @@ small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
   <div class="card"><div class="icon">🏋️</div><h3>Registrar treino</h3><p class="muted">Anote exercícios, séries e repetições.</p><button class="full" onclick="show('training')">Abrir</button></div>
   <div class="card"><div class="icon">🧭</div><h3>Check-in corporal</h3><p class="muted">Registre disposição, desconforto e observações.</p><button class="full secondary" onclick="show('checkin')">Abrir</button></div>
   <div class="card"><div class="icon">📚</div><h3>Exercícios</h3><p class="muted">Consulte a biblioteca educativa.</p><button class="full secondary" onclick="show('library')">Abrir</button></div>
-  <div class="card"><div class="icon">💬</div><h3>Assistente</h3><p class="muted">Conheça o fluxo inicial de orientação.</p><button class="full secondary" onclick="show('assistant')">Abrir</button></div>
+  <div class="card"><div class="icon">📷</div><h3>Câmera e avatar</h3><p class="muted">Abra a câmera e experimente o orientador visual.</p><button class="full secondary" onclick="show('camera')">Abrir</button></div><div class="card"><div class="icon">💬</div><h3>Assistente</h3><p class="muted">Conheça o fluxo inicial de orientação.</p><button class="full secondary" onclick="show('assistant')">Abrir</button></div>
  </div>
  <div class="section-title">Importante</div><div class="notice">O Mastria AI versão 0.1 é um protótipo de organização e educação física. Não diagnostica lesões, não prescreve reabilitação individual e não substitui avaliação de médico ou fisioterapeuta. Não treine com dor aguda, perda súbita de força, dormência nova ou piora importante: interrompa e procure avaliação profissional.</div>
 </section>
@@ -103,7 +103,15 @@ small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
  </div>
 </section>
 
-<section id="profile" class="view">
+<section id="camera" class="view">
+<div class="section-title">Câmera e orientador Mastria</div>
+<div class="avatar-row"><div class="avatar-face" id="mastriaAvatar">🤖</div><div><strong>Olá! Eu sou o orientador Mastria.</strong><div class="muted" id="avatarMessage">Posso acompanhar a imagem da câmera e mostrar referências visuais básicas.</div><button class="secondary" onclick="avatarSpeak()">Ouvir orientação</button></div></div>
+<div class="card"><div class="row"><strong>Visualização ao vivo</strong><span class="tag" id="cameraBadge">CÂMERA DESLIGADA</span></div>
+<div class="camera-stage"><div id="cameraPlaceholder" style="color:white;padding:25px">Toque em Ativar câmera e permita o acesso.</div><video id="mastriaVideo" autoplay playsinline muted></video><canvas id="mastriaCanvas"></canvas></div>
+<div class="camera-controls"><button onclick="startMastriaCamera()">Ativar câmera</button><button class="secondary" onclick="stopMastriaCamera()">Desligar</button><button class="secondary" onclick="switchMastriaCamera()">Trocar câmera</button><button class="ghost" onclick="toggleMirror()">Espelhar imagem</button></div><div class="status-line" id="cameraStatus">A câmera só será ativada quando você tocar no botão.</div></div>
+<div class="card" style="margin-top:12px"><strong>Leitura visual experimental</strong><div id="poseStatus" class="status-line">Aguardando câmera e detecção corporal.</div><div id="poseFeedback" class="bubble">O detector tentará marcar pontos de referência. Não é uma avaliação clínica.</div></div>
+<div class="notice" style="margin-top:12px">Privacidade: imagem processada no navegador, sem gravação ou envio automático. Use boa iluminação e não faça movimentos dolorosos.</div>
+</section><section id="profile" class="view">
  <div class="section-title">Perfil e dados</div>
  <div class="card">
   <label>Como gostaria de ser chamado?</label><input id="userName" placeholder="Seu nome">
@@ -119,7 +127,7 @@ small{font-size:11px;color:var(--muted)}.hidden{display:none!important}
  <button class="active" data-view="home" onclick="show('home')"><span>⌂</span>Início</button>
  <button data-view="training" onclick="show('training')"><span>🏋️</span>Treino</button>
  <button data-view="checkin" onclick="show('checkin')"><span>🧭</span>Check-in</button>
- <button data-view="assistant" onclick="show('assistant')"><span>💬</span>Assistente</button>
+ <button data-view="assistant" onclick="show('assistant')"><span>💬</span>Assistente</button><button data-view="camera" onclick="show('camera')"><span>📷</span>Câmera</button>
  <button data-view="profile" onclick="show('profile')"><span>☰</span>Perfil</button>
 </nav>
 <script>
@@ -152,4 +160,17 @@ exerciseSelect.innerHTML=exercises.map((e,i)=>`<option value="${i}">${e[0]}</opt
 function exportData(){const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='mastria-ai-meus-dados.json';a.click();URL.revokeObjectURL(u)}
 function clearData(){if(confirm('Apagar todos os registros locais deste aparelho? Esta ação não pode ser desfeita.')){localStorage.removeItem(key);data={workouts:[],checks:[],profile:{}};render();alert('Dados locais apagados.')}}
 </script>
-</body></html>
+<script>
+let mastriaStream=null,mastriaFacing='user',mastriaPose=null,mastriaBusy=false,mastriaFrame=null;
+const mastriaVideo=document.getElementById('mastriaVideo'),mastriaCanvas=document.getElementById('mastriaCanvas');
+function cameraStatus(t){document.getElementById('cameraStatus').textContent=t}
+function avatarSpeak(){const t=document.getElementById('avatarMessage').textContent;if(!window.speechSynthesis){cameraStatus('Áudio não disponível neste navegador.');return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='pt-BR';u.rate=.94;speechSynthesis.speak(u)}
+async function startMastriaCamera(){if(!window.isSecureContext){cameraStatus('A câmera exige endereço HTTPS seguro.');return}if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){cameraStatus('Este navegador não disponibilizou a câmera.');return}stopMastriaCamera(false);try{mastriaStream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:mastriaFacing},width:{ideal:1280},height:{ideal:720}}});mastriaVideo.srcObject=mastriaStream;await mastriaVideo.play();document.getElementById('cameraPlaceholder').classList.add('hidden');document.getElementById('cameraBadge').textContent='CÂMERA ATIVA';cameraStatus('Câmera ligada. Preparando detector corporal.');document.getElementById('avatarMessage').textContent='Câmera ligada. Enquadre o corpo inteiro e faça apenas movimentos confortáveis.';loadMastriaPose()}catch(e){cameraStatus(e.name==='NotAllowedError'?'Acesso negado. Permita o uso da câmera nas configurações do iPhone.':'Não foi possível abrir a câmera: '+e.message)}}
+function stopMastriaCamera(update=true){if(mastriaFrame)cancelAnimationFrame(mastriaFrame);mastriaFrame=null;if(mastriaStream){mastriaStream.getTracks().forEach(t=>t.stop());mastriaStream=null}if(mastriaVideo)mastriaVideo.srcObject=null;if(mastriaCanvas)mastriaCanvas.getContext('2d').clearRect(0,0,mastriaCanvas.width,mastriaCanvas.height);if(update){document.getElementById('cameraBadge').textContent='CÂMERA DESLIGADA';document.getElementById('cameraPlaceholder').classList.remove('hidden');cameraStatus('Câmera desligada. Nenhum vídeo foi gravado.')}}
+async function switchMastriaCamera(){mastriaFacing=mastriaFacing==='user'?'environment':'user';if(mastriaStream)await startMastriaCamera();else cameraStatus('A próxima ativação usará a câmera '+(mastriaFacing==='user'?'frontal':'traseira')+'.')}
+function toggleMirror(){const v=mastriaVideo,c=mastriaCanvas;const m=v.style.transform==='scaleX(-1)';v.style.transform=m?'none':'scaleX(-1)';c.style.transform=m?'none':'scaleX(-1)'}
+function loadMastriaPose(){if(mastriaPose){runMastriaPose();return}const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js';s.crossOrigin='anonymous';s.onload=()=>{try{mastriaPose=new Pose({locateFile:f=>'https://cdn.jsdelivr.net/npm/@mediapipe/pose/'+f});mastriaPose.setOptions({modelComplexity:1,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:.55,minTrackingConfidence:.55});mastriaPose.onResults(drawMastriaPose);cameraStatus('Detector corporal carregado.');runMastriaPose()}catch(e){cameraStatus('Câmera ativa; detector corporal indisponível. Verifique a internet.')}};s.onerror=()=>cameraStatus('Câmera ativa; não foi possível carregar o detector. Verifique a internet.');document.head.appendChild(s)}
+function runMastriaPose(){if(!mastriaStream||!mastriaPose)return;const tick=async()=>{if(!mastriaStream)return;if(mastriaVideo.readyState>=2&&!mastriaBusy){mastriaBusy=true;try{await mastriaPose.send({image:mastriaVideo})}catch(e){}finally{mastriaBusy=false}}mastriaFrame=requestAnimationFrame(tick)};tick()}
+function drawMastriaPose(r){const w=mastriaVideo.videoWidth||640,h=mastriaVideo.videoHeight||480;if(mastriaCanvas.width!==w||mastriaCanvas.height!==h){mastriaCanvas.width=w;mastriaCanvas.height=h}const c=mastriaCanvas.getContext('2d');c.clearRect(0,0,w,h);if(!r.poseLandmarks){document.getElementById('poseStatus').textContent='Corpo não identificado. Enquadre cabeça, tronco e pernas.';return}const p=r.poseLandmarks;document.getElementById('poseStatus').textContent='Pontos corporais identificados na imagem.';if(window.drawConnectors&&window.POSE_CONNECTIONS){drawConnectors(c,p,POSE_CONNECTIONS,{color:'#48d6ff',lineWidth:3});drawLandmarks(c,p,{color:'#ffffff',lineWidth:1,radius:3})}const a=p[11],b=p[12],x=p[23],y=p[24];let m='Pontos de referência detectados. Movimente-se devagar e sem dor.';if(a&&b&&x&&y&&a.visibility>.5&&b.visibility>.5&&x.visibility>.5&&y.visibility>.5){if(Math.abs(a.y-b.y)>.09)m='Observe o nivelamento dos ombros. A imagem não determina a causa nem avalia lesões.';else if(Math.abs(x.y-y.y)>.10)m='Observe o nivelamento do quadril sem forçar. Esta leitura é experimental.'}document.getElementById('poseFeedback').textContent=m;document.getElementById('avatarMessage').textContent=m}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&mastriaStream)stopMastriaCamera()});window.addEventListener('pagehide',()=>stopMastriaCamera());
+</script></body></html>
