@@ -13,6 +13,7 @@ const INSTRUCTIONS = [
 module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
 
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -28,13 +29,21 @@ module.exports = async function handler(req, res) {
 
   let body = req.body;
   if (typeof body === "string") {
-    try { body = JSON.parse(body); } catch (_) { body = {}; }
+    try {
+      body = JSON.parse(body);
+    } catch (_) {
+      body = {};
+    }
   }
+  if (!body || typeof body !== "object" || Array.isArray(body)) body = {};
 
-  const message = typeof body?.message === "string" ? body.message.trim() : "";
-  const goal = typeof body?.goal === "string" ? body.goal.slice(0, 120) : "Não informado";
+  const message = typeof body.message === "string" ? body.message.trim() : "";
+  const goal = typeof body.goal === "string" ? body.goal.trim().slice(0, 120) : "Não informado";
+
   if (!message || message.length > 2000) {
-    return res.status(400).json({ error: "Envie uma pergunta de até 2.000 caracteres." });
+    return res.status(400).json({
+      error: "Envie uma pergunta de até 2.000 caracteres."
+    });
   }
 
   try {
@@ -44,10 +53,11 @@ module.exports = async function handler(req, res) {
         "Authorization": "Bearer " + apiKey,
         "Content-Type": "application/json"
       },
+      signal: AbortSignal.timeout(25000),
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || "gpt-5.5",
         instructions: INSTRUCTIONS,
-        input: "Objetivo geral informado no perfil: " + goal + "\n\nPergunta: " + message,
+        input: "Objetivo geral informado no perfil: " + (goal || "Não informado") + "\n\nPergunta: " + message,
         max_output_tokens: 700,
         store: false
       })
@@ -56,7 +66,9 @@ module.exports = async function handler(req, res) {
     const data = await upstream.json().catch(() => ({}));
     if (!upstream.ok) {
       console.error("Falha no provedor de IA. Código HTTP:", upstream.status);
-      return res.status(502).json({ error: "O serviço de IA não respondeu. Tente novamente mais tarde." });
+      return res.status(502).json({
+        error: "O serviço de IA não respondeu. Verifique a configuração e tente novamente."
+      });
     }
 
     const answer = (data.output || [])
@@ -68,12 +80,18 @@ module.exports = async function handler(req, res) {
       .trim();
 
     if (!answer) {
-      return res.status(502).json({ error: "A IA não retornou uma resposta em texto." });
+      return res.status(502).json({
+        error: "A IA não retornou uma resposta em texto."
+      });
     }
 
     return res.status(200).json({ answer });
   } catch (error) {
     console.error("Falha de conexão com o serviço de IA:", error?.name || "Erro");
-    return res.status(502).json({ error: "Não foi possível conectar ao serviço de IA." });
+    return res.status(502).json({
+      error: error?.name === "TimeoutError"
+        ? "O serviço de IA demorou demais para responder. Tente novamente."
+        : "Não foi possível conectar ao serviço de IA."
+    });
   }
 };
