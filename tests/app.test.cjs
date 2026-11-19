@@ -100,12 +100,13 @@ test("o avatar acompanha famílias de movimento e todos os 132 exercícios têm 
   assert.equal(classify(["Bird-dog","Tronco"]).move, "core");
 });
 
-test("a instrutora humana 3D texturizada e articulada está integrada ao treino", () => {
+test("a professora 3D Mastria é construída no próprio aplicativo e articulada por movimento", () => {
   assert.match(html, /id="mastria3DCanvas"/);
-  assert.match(html, /GLTFLoader/);
-  assert.match(html, /run-maya-3d-person-animated-eebf24b9/);
+  assert.match(html, /function buildMastriaTeacher\s*\(/);
+  assert.match(html, /window\.mastria3DReady\s*=\s*true/);
   assert.match(html, /window\.setMastria3DExercise/);
-  assert.match(html, /function fallback\(err\)/);
+  assert.match(html, /function pose\(t\)/);
+  assert.doesNotMatch(html, /innerscene\.com\/api\/library/);
 });
 
 test("o painel administrativo cria e publica treinos locais para a tela inicial", () => {
