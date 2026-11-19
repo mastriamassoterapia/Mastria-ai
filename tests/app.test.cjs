@@ -21,7 +21,8 @@ test('todos os scripts embutidos têm sintaxe válida', () => {
 test('biblioteca mantém 132 exercícios e orientação de segurança', () => {
   assert.match(html, /const exercises=\[/);
   assert.match(html, /Não treine com dor aguda/);
-  assert.match(html, /extraExercises/);\n  assert.match(html, /exercises\.push\(\.\.\.extraExercises\)/);
+  assert.match(html, /extraExercises/);
+  assert.match(html, /exercises\.push\(\.\.\.extraExercises\)/);
   assert.match(html, /interrompa se houver dor/i);
 });
 
