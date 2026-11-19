@@ -43,3 +43,26 @@ test('o aplicativo informa armazenamento local e ausência de gravação automá
   assert.match(html, /localStorage/);
   assert.match(html, /sem gravação ou envio automático|não é gravado nem enviado/i);
 });
+
+test('a biblioteca expandida inclui exercícios adicionais de força e mobilidade', () => {
+  for (const name of ['Agachamento com apoio', 'Subida em degrau baixo', 'Rotação externa com elástico leve', 'Mobilidade cervical suave']) {
+    assert.ok(html.includes(name), 'exercício ausente: ' + name);
+  }
+  assert.match(html, /exerciseCount/);
+});
+
+test('a interface conversa com o serviço de IA sem expor a chave no navegador', () => {
+  assert.match(html, /fetch\('\/api\/chat'/);
+  assert.match(html, /OPENAI_API_KEY/);
+  assert.doesNotMatch(html, /sk-[A-Za-z0-9]{20,}/);
+});
+
+test('a função de servidor valida método e entrada e usa a API Responses sem armazenamento', () => {
+  const api = fs.readFileSync('api/chat.js', 'utf8');
+  new vm.Script(api, { filename: 'api/chat.js' });
+  assert.match(api, /req\.method !== "POST"/);
+  assert.match(api, /message\.length > 2000/);
+  assert.match(api, /api\.openai\.com\/v1\/responses/);
+  assert.match(api, /store: false/);
+  assert.match(api, /process\.env\.OPENAI_API_KEY/);
+});
