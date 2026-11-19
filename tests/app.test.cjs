@@ -18,10 +18,11 @@ test('todos os scripts embutidos têm sintaxe válida', () => {
   scripts.forEach((source, index) => new vm.Script(source, { filename: 'index-script-' + index + '.js' }));
 });
 
-test('biblioteca inicial mantém 12 exercícios e orientação de segurança', () => {
+test('biblioteca mantém 132 exercícios e orientação de segurança', () => {
   assert.match(html, /const exercises=\[/);
   assert.match(html, /Não treine com dor aguda/);
-  assert.match(html, /exercises\.length|12/);
+  assert.match(html, /extraExercises/);
+  assert.match(html, /exercises\.push\(\.\.\.extraExercises\)/);
   assert.match(html, /interrompa se houver dor/i);
 });
 
@@ -45,7 +46,7 @@ test('o aplicativo informa armazenamento local e ausência de gravação automá
 });
 
 test('a biblioteca expandida inclui exercícios adicionais de força e mobilidade', () => {
-  for (const name of ['Agachamento com apoio', 'Subida em degrau baixo', 'Rotação externa com elástico leve', 'Mobilidade cervical suave']) {
+  for (const name of ['Agachamento com apoio', 'Marcha sentada para iliopsoas', 'Abdominal curto', 'Prancha lateral na parede', 'Mobilidade cervical de rotação curta']) {
     assert.ok(html.includes(name), 'exercício ausente: ' + name);
   }
   assert.match(html, /exerciseCount/);

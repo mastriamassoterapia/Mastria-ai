@@ -20,7 +20,7 @@ A câmera requer HTTPS e autorização explícita do usuário. O rastreamento co
 
 ## Exercícios
 
-A biblioteca contém 32 descrições educativas. Ela não constitui prescrição de reabilitação ou substitui avaliação individual.
+A biblioteca contém 132 descrições educativas (32 anteriores e 100 novas). Ela não constitui prescrição de reabilitação ou substitui avaliação individual.
 
 ## Testes
 
