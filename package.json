@@ -1,0 +1,9 @@
+{
+  "name": "mastria-ai",
+  "version": "0.1.1",
+  "private": true,
+  "description": "Protótipo Mastria AI para acompanhamento de treinos e movimento",
+  "scripts": {
+    "test": "node --test"
+  }
+}
